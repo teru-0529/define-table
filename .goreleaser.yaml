@@ -22,6 +22,9 @@ builds:
       - linux
       - windows
       # - darwin
+    goarch:
+      # デフォルトでは386（32-bit）も含まれる
+      - amd64
 
 archives:
   - format: tar.gz
