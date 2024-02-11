@@ -10,7 +10,7 @@ Public Sub load_(ByVal line_sep As Integer)
   Call table_sheets.clear
   
   
-  data = text_io.plain_in(settings.save_data_path(), line_sep)
+  data = text_io.plain_in(SAVE_DATA, line_sep)
 
   'DDL’PˆÊ‚Å•ªŠ„
   ReDim Preserve sep_nos(0)

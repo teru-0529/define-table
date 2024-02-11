@@ -27,6 +27,16 @@ Public DDL_DIR As String
 Dim OPERATION_MODE As String
 Dim SAVE_HISTORY_FUNC As Boolean
 
+'// スキーマ名取得
+Public Function getSchemaJp() As String
+  getSchemaJp = SCHEMA_JP
+End Function
+
+'// スキーマ名取得
+Public Function getSchemaEn() As String
+  getSchemaEn = SCHEMA_EN
+End Function
+
 '// バージョン情報取得（Full）
 Public Function getFullVersion() As String
   getFullVersion = Process.outerExec("version -F")

@@ -60,7 +60,7 @@ Public Sub load_(ByVal line_sep As Integer)
   Dim data() As String, row_length As Long
   Dim i As Long
   
-  data = text_io.plain_in(settings.table_elements_path(), line_sep)
+  data = text_io.plain_in(ELEMENTS_DATA, line_sep)
   row_length = (UBound(data) + 1) / PARAMS
   ReDim wk_range(row_length - 1, 8)
   

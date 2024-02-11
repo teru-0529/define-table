@@ -29,7 +29,7 @@ Public Sub clear()
 
   For Each Target In Worksheets
     Select Case Target.name
-      Case elements.name, index_sht.name, settings.name, template.name, work.name
+      Case elements.name, index_sht.name, template.name, work.name
 
       Case Else
         Application.DisplayAlerts = False

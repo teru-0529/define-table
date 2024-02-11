@@ -92,12 +92,12 @@ End Sub
 
 '項目ファイルの更新日時を登録
 Private Sub set_modify_datetime()
-  ThisWorkbook.Names.Add name:="CURRENT_DATETIME", RefersToR1C1:=text_io.modify_datetime(settings.table_elements_path())
+  ThisWorkbook.Names.Add name:="CURRENT_DATETIME", RefersToR1C1:=text_io.modify_datetime(ELEMENTS_DATA)
 End Sub
 
 '項目ファイルの更新日時が最新かどうかをチェック
 Private Function is_update_modify_datetime() As Boolean
-  ThisWorkbook.Names.Add name:="MODIFY_DATETIME", RefersToR1C1:=text_io.modify_datetime(settings.table_elements_path())
+  ThisWorkbook.Names.Add name:="MODIFY_DATETIME", RefersToR1C1:=text_io.modify_datetime(ELEMENTS_DATA)
   is_update_modify_datetime = ThisWorkbook.Names("CURRENT_DATETIME") <> ThisWorkbook.Names("MODIFY_DATETIME")
 End Function
 

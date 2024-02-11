@@ -51,7 +51,7 @@ Public Sub save_(ByVal line_sep As Integer)
     If Target.Offset(, 4).value Then Call Worksheets(Target.value).save_(data)
   Next
   
-  Call text_io.plain_out(settings.save_data_path(), data, line_sep)
+  Call text_io.plain_out(SAVE_DATA, data, line_sep)
 End Sub
 
 'ddl.èoóÕ
@@ -78,6 +78,6 @@ Public Sub out_view_md(ByVal line_sep As Integer)
   Next
   
   Call push_array(data, "")
-  Call text_io.plain_out(settings.md_path(), data, line_sep)
+  Call text_io.plain_out(DDL_VIEW, data, line_sep)
 End Sub
 
