@@ -12,16 +12,20 @@ Declare PtrSafe Function GetPrivateProfileString Lib _
     ByVal ini_path As String _
 ) As Long
 
+'// スキーマ
+Public SCHEMA_JP As String
+Public SCHEMA_EN As String
+
 '// 入出力パス
 Public SAVE_DATA As String
-Public TABLE_ELEMENTS As String
-Public API_ELEMENTS As String
-Public TYPES_DDL As String
+Public ELEMENTS_DATA As String
+Public DDL_VIEW As String
 
-Public VIEW_DIR As String
+Public DDL_DIR As String
 
 '// 操作モード
 Dim OPERATION_MODE As String
+Dim SAVE_HISTORY_FUNC As Boolean
 
 '// バージョン情報取得（Full）
 Public Function getFullVersion() As String
@@ -35,8 +39,7 @@ End Function
 
 '// 開発モードの場合にTrue
 Public Function isDevelop() As Boolean
-  'isDevelop = OPERATION_MODE = "develop" FIXME:
-  isDevelop = True
+  isDevelop = OPERATION_MODE = "develop"
 End Function
 
 '// ./vba.iniから情報を取得してPublic変数に設定する
@@ -48,23 +51,29 @@ Public Sub init(ByVal iniFile As String)
 
   Debug.Print "|----|---- configuration setup start ----|----|"
 
+  SCHEMA_JP = getIniValue("schema", "nameJp", iniPath)
+  Debug.Print "[config] SCHEMA_JP: " & SCHEMA_JP
+  
+  SCHEMA_EN = getIniValue("schema", "nameEn", iniPath)
+  Debug.Print "[config] SCHEMA_EN: " & SCHEMA_EN
+
   SAVE_DATA = absPath(getIniValue("Path", "saveData", iniPath))
   Debug.Print "[config] SAVE_DATA: " & SAVE_DATA
 
-  TABLE_ELEMENTS = absPath(getIniValue("Path", "tableElements", iniPath))
-  Debug.Print "[config] TABLE_ELEMENTS: " & TABLE_ELEMENTS
+  ELEMENTS_DATA = absPath(getIniValue("Path", "elementsData", iniPath))
+  Debug.Print "[config] ELEMENTS_DATA: " & ELEMENTS_DATA
 
-  API_ELEMENTS = absPath(getIniValue("Path", "apiElements", iniPath))
-  Debug.Print "[config] API_ELEMENTS: " & API_ELEMENTS
+  DDL_VIEW = absPath(getIniValue("Path", "view", iniPath))
+  Debug.Print "[config] DDL_VIEW: " & DDL_VIEW
 
-  TYPES_DDL = absPath(getIniValue("Path", "typesDDL", iniPath))
-  Debug.Print "[config] TYPES_DDL: " & TYPES_DDL
-
-  VIEW_DIR = absPath(getIniValue("Path", "viewDir", iniPath))
-  Debug.Print "[config] VIEW_DIR: " & VIEW_DIR
+  DDL_DIR = absPath(getIniValue("Path", "ddlDor", iniPath))
+  Debug.Print "[config] DDL_DIR: " & DDL_DIR
 
   OPERATION_MODE = getIniValue("Operation", "mode", iniPath)
   Debug.Print "[config] OPERATION_MODE: " & OPERATION_MODE
+  
+  SAVE_HISTORY_FUNC = getIniValue("Operation", "saveHistoryFunc", iniPath)
+  Debug.Print "[config] SAVE_HISTORY_FUNC: " & SAVE_HISTORY_FUNC
   
   Set FSO = Nothing
   Call Util.showTime(Timer - startTime)

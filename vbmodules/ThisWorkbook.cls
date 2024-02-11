@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
+Dim startTime As Double
 
 ' book選択時、テーブル連携用ファイルがアップデートされている場合は、データを更新する。
 Private Sub Workbook_Activate()
@@ -27,6 +28,9 @@ Private Sub Workbook_Open()
   Dim start_time As Double
   start_time = Timer
 
+  '// パス情報の取得
+  Call Config.init("vba.ini")
+  
   Application.ScreenUpdating = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '業務ロジック
@@ -38,14 +42,26 @@ Private Sub Workbook_Open()
   Application.ScreenUpdating = True
   Application.StatusBar = False
 
-  Call showTime(Timer - start_time)
-  MsgBox "ver 2.0.3 - released 2022/07/09"
+  Call showTime(Timer - startTime)
+  MsgBox Config.getFullVersion()
 End Sub
 
 ' 保存時
 Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
+  startTime = Timer
+
+  '// クライアントバリデーション
+  Call Process.validate
+
+End Sub
+
+' 保存時
+Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Dim start_time As Double
   start_time = Timer
+
+  '// パス情報の取得
+  Call Config.init("vba.ini")
 
   Application.ScreenUpdating = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -71,6 +87,7 @@ Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
   '// 開発モードの場合、モジュールを出力
   If Config.isDevelop() Then Call ExportModule.SaveModule
   Debug.Print Config.getFullVersion
+  Call Config.init("vba.ini")
 End Sub
 
 '項目ファイルの更新日時を登録

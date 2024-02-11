@@ -198,8 +198,8 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   Dim data() As String, file_name As String, table_name As String, Target As Range, i As Long, j As Long
   Dim wk() As String
   
-  file_name = settings.ddl_dir_path & DDL_PREFIX & settings.schema_en & "_" & Range("テーブルEN").value & ".sql"
-  table_name = settings.schema_en & "." & Range("テーブルEN").value
+  file_name = settings.ddl_dir_path & DDL_PREFIX & SCHEMA_EN & "_" & Range("テーブルEN").value & ".sql"
+  table_name = SCHEMA_EN & "." & Range("テーブルEN").value
 
   Call push_array(data, "")
   
