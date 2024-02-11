@@ -1,0 +1,270 @@
+- name_jp: 商品No
+  name_en: product_no
+  db_model: varchar(10)
+  constraint: (LENGTH(product_no) >= 9)
+  must_not_null: false
+  is_string_default: true
+  description: 商品特定のユニークキー
+  is_origin: true
+  origin: null
+
+- name_jp: 定価
+  name_en: price
+  db_model: integer
+  constraint: (price >= 0 AND price <= 99999)
+  must_not_null: false
+  is_string_default: false
+  description: 円、希望小売価格
+  is_origin: true
+  origin: null
+
+- name_jp: UP
+  name_en: up
+  db_model: numeric
+  constraint: (up > 0 AND up <= 1000)
+  must_not_null: false
+  is_string_default: false
+  description: 仕入れ先からの購入価格
+  is_origin: true
+  origin: null
+
+- name_jp: 登録日
+  name_en: registration_date
+  db_model: date
+  constraint: null
+  must_not_null: false
+  is_string_default: false
+  description: 登録日
+  is_origin: true
+  origin: null
+
+- name_jp: 商品区分
+  name_en: product_kbn
+  db_model: product_kbn
+  constraint: null
+  must_not_null: true
+  is_string_default: true
+  description: 商品の状態を表す区分
+  is_origin: true
+  origin: null
+
+- name_jp: コメント
+  name_en: comment
+  db_model: text
+  constraint: (LENGTH(comment) >= 10)
+  must_not_null: false
+  is_string_default: true
+  description: コメント
+  is_origin: true
+  origin: null
+
+- name_jp: 更新可能
+  name_en: can_update
+  db_model: boolean
+  constraint: null
+  must_not_null: true
+  is_string_default: false
+  description: 更新可否
+  is_origin: true
+  origin: null
+
+- name_jp: 部署
+  name_en: department
+  db_model: department
+  constraint: null
+  must_not_null: true
+  is_string_default: true
+  description: 部署
+  is_origin: true
+  origin: null
+
+- name_jp: 受注日
+  name_en: order_date
+  db_model: date
+  constraint: null
+  must_not_null: false
+  is_string_default: false
+  description: 受注日
+  is_origin: true
+  origin: null
+
+- name_jp: 数量
+  name_en: quantity
+  db_model: integer
+  constraint: (quantity >= 0 AND quantity <= 99999)
+  must_not_null: false
+  is_string_default: false
+  description: 数量
+  is_origin: true
+  origin: null
+
+- name_jp: 受注No
+  name_en: received_order_no
+  db_model: varchar(10)
+  constraint: (LENGTH(received_order_no) >= 10)
+  must_not_null: false
+  is_string_default: true
+  description: 受注番号
+  is_origin: true
+  origin: null
+
+- name_jp: 受注連番
+  name_en: order_detail_no
+  db_model: serial
+  constraint: null
+  must_not_null: false
+  is_string_default: false
+  description: 受注明細番号
+  is_origin: true
+  origin: null
+
+- name_jp: 担当者名
+  name_en: person_in_charge
+  db_model: varchar(30)
+  constraint: null
+  must_not_null: false
+  is_string_default: true
+  description: 業務担当者
+  is_origin: true
+  origin: null
+
+- name_jp: ユーザーID
+  name_en: user_id
+  db_model: varchar(4)
+  constraint: (LENGTH(user_id) >= 4)
+  must_not_null: false
+  is_string_default: true
+  description: システム利用ユーザー
+  is_origin: true
+  origin: null
+
+- name_jp: 商品名
+  name_en: product_name
+  db_model: varchar(100)
+  constraint: null
+  must_not_null: false
+  is_string_default: true
+  description: 取扱商品名
+  is_origin: true
+  origin: null
+
+- name_jp: 得意先ID
+  name_en: customer_id
+  db_model: varchar(3)
+  constraint: (LENGTH(customer_id) >= 3)
+  must_not_null: false
+  is_string_default: true
+  description: 得意先のID
+  is_origin: true
+  origin: null
+
+- name_jp: 得意先名
+  name_en: customer_name
+  db_model: varchar(100)
+  constraint: null
+  must_not_null: false
+  is_string_default: true
+  description: 得意先の名称
+  is_origin: true
+  origin: null
+
+- name_jp: 稼働中
+  name_en: is_working
+  db_model: boolean
+  constraint: null
+  must_not_null: true
+  is_string_default: false
+  description: 稼働状況
+  is_origin: true
+  origin: null
+
+- name_jp: 利益率
+  name_en: profit_rate
+  db_model: numeric
+  constraint: (profit_rate >= -10 AND profit_rate <= 10)
+  must_not_null: false
+  is_string_default: false
+  description: 利益率
+  is_origin: true
+  origin: null
+
+- name_jp: 帳票未表示
+  name_en: exclude_report
+  db_model: boolean
+  constraint: null
+  must_not_null: true
+  is_string_default: false
+  description: 帳票などに出力しない場合にtrue
+  is_origin: true
+  origin: null
+
+- name_jp: 発送時間
+  name_en: shipping_time
+  db_model: varchar(5)
+  constraint: (shipping_time ~* '^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$')
+  must_not_null: false
+  is_string_default: false
+  description: 出荷時間
+  is_origin: true
+  origin: null
+
+- name_jp: 取引有無
+  name_en: is_active_customer
+  db_model: boolean
+  constraint: null
+  must_not_null: true
+  is_string_default: false
+  description: 取引中かどうか
+  is_origin: true
+  origin: null
+
+- name_jp: 取引先区分
+  name_en: customer_type
+  db_model: customer_type
+  constraint: null
+  must_not_null: true
+  is_string_default: true
+  description: 取引先の区分
+  is_origin: true
+  origin: null
+
+- name_jp: キャンペーン定価
+  name_en: campane_price
+  db_model: integer
+  constraint: (campane_price >= 0 AND campane_price <= 99999)
+  must_not_null: false
+  is_string_default: false
+  description: キャンペーンの定価
+  is_origin: false
+  origin: 定価
+
+- name_jp: 受注担当者ID
+  name_en: order_pic
+  db_model: varchar(4)
+  constraint: (LENGTH(order_pic) >= 4)
+  must_not_null: false
+  is_string_default: true
+  description: 受注担当者のユーザーID
+  is_origin: false
+  origin: ユーザーID
+
+- name_jp: 商品担当者ID
+  name_en: product_pic
+  db_model: varchar(4)
+  constraint: (LENGTH(product_pic) >= 4)
+  must_not_null: false
+  is_string_default: true
+  description: 商品管理者のユーザーID
+  is_origin: false
+  origin: ユーザーID
+
+- name_jp: 売上計上部署
+  name_en: salese_department
+  db_model: department
+  constraint: null
+  must_not_null: true
+  is_string_default: true
+  description: 売上計上部署
+  is_origin: false
+  origin: 部署
+
