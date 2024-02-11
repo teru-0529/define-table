@@ -25,3 +25,10 @@ dist/
 /dist
 /view
 /out
+
+*.cls
+!vbmodules/elements.cls
+!vbmodules/index_sht.cls
+!vbmodules/template.cls
+!vbmodules/ThisWorkbook.cls
+!vbmodules/work.cls
