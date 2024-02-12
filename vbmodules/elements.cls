@@ -9,6 +9,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
+Const COL_NAME_JP = 1
+
 'カラム番号
 Private Enum col_no
   項目名J = 1
@@ -52,6 +54,63 @@ Public Sub init_format(ByVal start_row As Integer, ByVal rows As Integer)
   Cells(start_row, col_no.派生項目).Resize(f_rows).HorizontalAlignment = xlCenter
   
   Application.EnableEvents = True
+End Sub
+
+'// データLoad(From yaml)
+Public Sub load(ByVal data As String)
+  Dim records() As String, items() As String
+  Dim i As Long, rowLength As Long
+
+  '// 初期化
+  UsedRange.Offset(1).clear
+
+  '// 行ごとのデータに分割
+  records = Split(data, vbLf)
+  rowLength = UBound(records)
+  ReDim wkRange1(rowLength - 1, 8)
+  
+  '// 列ごとの配列に変換
+  For i = 0 To rowLength - 1
+    items = Split(records(i), vbTab)
+
+    wk_range(i, 0) = items(0) '名称_和
+    wk_range(i, 1) = items(1) '名称_英
+    wk_range(i, 2) = items(2) 'DB型
+    wk_range(i, 3) = items(3) 'チェック制約
+    wk_range(i, 4) = items(4) '強制NOTNULL
+    wk_range(i, 5) = items(5) '文字列デフォルト有無
+    wk_range(i, 6) = items(6) '説明
+    wk_range(i, 7) = items(7) '派生項目
+    wk_range(i, 8) = items(8) '派生元
+    
+  Next i
+
+  '// 値セット
+  Cells(2, COL_NAME_JP).Resize(row_length, 9) = wk_range
+
+  '// フォーマット
+  Call areaFormat
+End Sub
+
+'// フォーマット
+Private Sub areaFormat()
+  Application.ScreenUpdating = False
+  Application.EnableEvents = False
+  
+  '// 枠線
+  Call Formatter.borderAndFontsize(Range("ELEM_FULL"))
+
+  '// 背景色
+  Call Formatter.notInput(Range("ELEM_FULL"))
+  
+  '// 表示形式
+  Call Formatter.formatLocal(Range("ELEM_H"), """○"";;;")
+
+  '// 表示形式
+  Call Formatter.horizontalPosition(Range("ELEM_H"), xlCenter)
+  
+  Application.EnableEvents = True
+  Application.ScreenUpdating = True
 End Sub
 
 'table_elements読込

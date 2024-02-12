@@ -15,6 +15,8 @@ Dim startTime As Double
 Private Sub Workbook_Activate()
   Application.ScreenUpdating = False
   If is_update_modify_datetime() Then
+    'MsgBox outerExec("loadElements -I C:\Users\andre\.local\share\go\workspace\define-table\save_data_elm.yaml")
+
     Call elements.load_(adLF)
     Call set_modify_datetime
     Debug.Print "Updated!"
@@ -79,7 +81,6 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   
   End If
   
-  
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   Application.ScreenUpdating = True
   Application.StatusBar = False
@@ -87,7 +88,6 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   '// 開発モードの場合、モジュールを出力
   If Config.isDevelop() Then Call ExportModule.SaveModule
   Debug.Print Config.getFullVersion
-  Call Config.init("vba.ini")
 End Sub
 
 '項目ファイルの更新日時を登録
