@@ -7,7 +7,7 @@
         not_null: 1
         default: null
 
-      - name: 得意先名
+      - name: 得意先
         not_null: 1
         default: null
 

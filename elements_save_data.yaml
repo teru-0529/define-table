@@ -1,269 +1,334 @@
-- name_jp: 商品No
-  name_en: product_no
-  db_model: varchar(10)
-  constraint: (LENGTH(product_no) >= 9)
-  must_not_null: false
-  is_string_default: true
-  description: 商品特定のユニークキー
-  is_origin: true
-  origin: null
-
-- name_jp: 定価
-  name_en: price
-  db_model: integer
-  constraint: (price >= 0 AND price <= 99999)
-  must_not_null: false
-  is_string_default: false
-  description: 円、希望小売価格
-  is_origin: true
-  origin: null
-
-- name_jp: UP
-  name_en: up
-  db_model: numeric
-  constraint: (up > 0 AND up <= 1000)
-  must_not_null: false
-  is_string_default: false
-  description: 仕入れ先からの購入価格
-  is_origin: true
-  origin: null
-
-- name_jp: 登録日
-  name_en: registration_date
-  db_model: date
-  constraint: null
-  must_not_null: false
-  is_string_default: false
-  description: 登録日
-  is_origin: true
-  origin: null
-
-- name_jp: 商品区分
-  name_en: product_kbn
-  db_model: product_kbn
-  constraint: null
-  must_not_null: true
-  is_string_default: true
-  description: 商品の状態を表す区分
-  is_origin: true
-  origin: null
-
-- name_jp: コメント
-  name_en: comment
-  db_model: text
-  constraint: (LENGTH(comment) >= 10)
-  must_not_null: false
-  is_string_default: true
-  description: コメント
-  is_origin: true
-  origin: null
-
-- name_jp: 更新可能
-  name_en: can_update
-  db_model: boolean
-  constraint: null
-  must_not_null: true
-  is_string_default: false
-  description: 更新可否
-  is_origin: true
-  origin: null
-
-- name_jp: 部署
-  name_en: department
-  db_model: department
-  constraint: null
-  must_not_null: true
-  is_string_default: true
-  description: 部署
-  is_origin: true
-  origin: null
-
-- name_jp: 受注日
-  name_en: order_date
-  db_model: date
-  constraint: null
-  must_not_null: false
-  is_string_default: false
-  description: 受注日
-  is_origin: true
-  origin: null
-
-- name_jp: 数量
-  name_en: quantity
-  db_model: integer
-  constraint: (quantity >= 0 AND quantity <= 99999)
-  must_not_null: false
-  is_string_default: false
-  description: 数量
-  is_origin: true
-  origin: null
-
-- name_jp: 受注No
-  name_en: received_order_no
-  db_model: varchar(10)
-  constraint: (LENGTH(received_order_no) >= 10)
-  must_not_null: false
-  is_string_default: true
-  description: 受注番号
-  is_origin: true
-  origin: null
-
-- name_jp: 受注連番
-  name_en: order_detail_no
-  db_model: serial
-  constraint: null
-  must_not_null: false
-  is_string_default: false
-  description: 受注明細番号
-  is_origin: true
-  origin: null
-
-- name_jp: 担当者名
-  name_en: person_in_charge
-  db_model: varchar(30)
-  constraint: null
-  must_not_null: false
-  is_string_default: true
-  description: 業務担当者
-  is_origin: true
-  origin: null
-
-- name_jp: ユーザーID
-  name_en: user_id
-  db_model: varchar(4)
-  constraint: (LENGTH(user_id) >= 4)
-  must_not_null: false
-  is_string_default: true
-  description: システム利用ユーザー
-  is_origin: true
-  origin: null
-
-- name_jp: 商品名
-  name_en: product_name
-  db_model: varchar(100)
-  constraint: null
-  must_not_null: false
-  is_string_default: true
-  description: 取扱商品名
-  is_origin: true
-  origin: null
-
-- name_jp: 得意先ID
-  name_en: customer_id
-  db_model: varchar(3)
-  constraint: (LENGTH(customer_id) >= 3)
-  must_not_null: false
-  is_string_default: true
-  description: 得意先のID
-  is_origin: true
-  origin: null
-
-- name_jp: 得意先名
-  name_en: customer_name
-  db_model: varchar(100)
-  constraint: null
-  must_not_null: false
-  is_string_default: true
-  description: 得意先の名称
-  is_origin: true
-  origin: null
-
-- name_jp: 稼働中
-  name_en: is_working
-  db_model: boolean
-  constraint: null
-  must_not_null: true
-  is_string_default: false
-  description: 稼働状況
-  is_origin: true
-  origin: null
-
-- name_jp: 利益率
-  name_en: profit_rate
-  db_model: numeric
-  constraint: (profit_rate >= -10 AND profit_rate <= 10)
-  must_not_null: false
-  is_string_default: false
-  description: 利益率
-  is_origin: true
-  origin: null
-
-- name_jp: 帳票未表示
-  name_en: exclude_report
-  db_model: boolean
-  constraint: null
-  must_not_null: true
-  is_string_default: false
-  description: 帳票などに出力しない場合にtrue
-  is_origin: true
-  origin: null
-
-- name_jp: 発送時間
-  name_en: shipping_time
-  db_model: varchar(5)
-  constraint: (shipping_time ~* '^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$')
-  must_not_null: false
-  is_string_default: false
-  description: 出荷時間
-  is_origin: true
-  origin: null
-
-- name_jp: 取引有無
-  name_en: is_active_customer
-  db_model: boolean
-  constraint: null
-  must_not_null: true
-  is_string_default: false
-  description: 取引中かどうか
-  is_origin: true
-  origin: null
-
-- name_jp: 取引先区分
-  name_en: customer_type
-  db_model: customer_type
-  constraint: null
-  must_not_null: true
-  is_string_default: true
-  description: 取引先の区分
-  is_origin: true
-  origin: null
-
-- name_jp: キャンペーン定価
-  name_en: campane_price
-  db_model: integer
-  constraint: (campane_price >= 0 AND campane_price <= 99999)
-  must_not_null: false
-  is_string_default: false
-  description: キャンペーンの定価
-  is_origin: false
-  origin: 定価
-
-- name_jp: 受注担当者ID
-  name_en: order_pic
-  db_model: varchar(4)
-  constraint: (LENGTH(order_pic) >= 4)
-  must_not_null: false
-  is_string_default: true
-  description: 受注担当者のユーザーID
-  is_origin: false
-  origin: ユーザーID
-
-- name_jp: 商品担当者ID
-  name_en: product_pic
-  db_model: varchar(4)
-  constraint: (LENGTH(product_pic) >= 4)
-  must_not_null: false
-  is_string_default: true
-  description: 商品管理者のユーザーID
-  is_origin: false
-  origin: ユーザーID
-
-- name_jp: 売上計上部署
-  name_en: salese_department
-  db_model: department
-  constraint: null
-  must_not_null: true
-  is_string_default: true
-  description: 売上計上部署
-  is_origin: false
-  origin: 部署
+data_type: define_elements
+version: 3.0.7
+create_at: 2024-02-03T07:58:28+09:00
+elements:
+  - name_jp: 商品No
+    name_en: productNo
+    domain: NOKEY
+    reg_ex: null
+    min_digits: 9
+    max_digits: 10
+    min_value: null
+    max_value: null
+    example: AAA000001
+    description: 商品特定のユニークキー
+  - name_jp: 定価
+    name_en: price
+    domain: 整数
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: 0
+    max_value: null
+    example: 14000
+    description: 円、希望小売価格
+  - name_jp: UP
+    name_en: up
+    domain: 実数
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: -1000
+    max_value: 1000
+    example: 250.25
+    description: 仕入れ先からの購入価格
+  - name_jp: 登録日
+    name_en: registrationDate
+    domain: 日付
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: "2022-12-31"
+    description: 登録日
+  - name_jp: 商品区分
+    name_en: productKbn
+    domain: 区分値
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: NORMAL
+    description: 商品の状態を表す区分
+  - name_jp: コメント
+    name_en: comment
+    domain: テキスト
+    reg_ex: null
+    min_digits: 10
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: 制御用装置
+    description: コメント
+  - name_jp: 更新可能
+    name_en: canUpdate
+    domain: 可否/フラグ
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: false
+    description: 更新可否
+  - name_jp: 部署
+    name_en: department
+    domain: 区分値
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: ORDERING
+    description: 部署
+  - name_jp: 受注日
+    name_en: orderDate
+    domain: 日付
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: "2022-12-31"
+    description: 受注日
+  - name_jp: 数量
+    name_en: quantity
+    domain: 整数
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: 0
+    max_value: 99999
+    example: 30
+    description: 数量
+  - name_jp: 受注No
+    name_en: receivedOrderNo
+    domain: NOKEY
+    reg_ex: null
+    min_digits: 10
+    max_digits: 10
+    min_value: null
+    max_value: null
+    example: RO-0000001
+    description: 受注番号
+  - name_jp: 受注連番
+    name_en: orderDetailNo
+    domain: ID
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: 1051
+    description: 受注明細番号
+  - name_jp: 担当者名
+    name_en: personInCharge
+    domain: 文字列
+    reg_ex: null
+    min_digits: null
+    max_digits: 30
+    min_value: null
+    max_value: null
+    example: 織田信長
+    description: 業務担当者
+  - name_jp: ユーザーID
+    name_en: userId
+    domain: NOKEY
+    reg_ex: null
+    min_digits: 4
+    max_digits: 4
+    min_value: null
+    max_value: null
+    example: A032
+    description: システム利用ユーザー
+  - name_jp: 商品名称
+    name_en: productName
+    domain: 文字列
+    reg_ex: null
+    min_digits: null
+    max_digits: 100
+    min_value: null
+    max_value: null
+    example: 日本刀
+    description: 取扱商品名
+  - name_jp: 得意先ID
+    name_en: customerId
+    domain: NOKEY
+    reg_ex: null
+    min_digits: 3
+    max_digits: 3
+    min_value: null
+    max_value: null
+    example: A01
+    description: 得意先のID
+  - name_jp: 得意先
+    name_en: customerName
+    domain: 文字列
+    reg_ex: null
+    min_digits: null
+    max_digits: 100
+    min_value: null
+    max_value: null
+    example: 徳川物産
+    description: 得意先の名称
+  - name_jp: 稼働中
+    name_en: isWorking
+    domain: 可否/フラグ
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: true
+    description: 稼働状況
+  - name_jp: 利益率
+    name_en: profitRate
+    domain: 実数
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: 10
+    example: 0.324
+    description: 利益率
+  - name_jp: 帳票未表示
+    name_en: excludeReport
+    domain: 可否/フラグ
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: true
+    description: 帳票などに出力しない場合にtrue
+  - name_jp: 発送時間
+    name_en: shippingTime
+    domain: 時間
+    reg_ex: ^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: "14:00"
+    description: 出荷時間
+  - name_jp: 取引有無
+    name_en: isActiveCustomer
+    domain: 可否/フラグ
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: true
+    description: 取引中かどうか
+  - name_jp: 取引先区分
+    name_en: customerType
+    domain: 区分値
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: STANDARD
+    description: 取引先の区分
+  - name_jp: 承認日時
+    name_en: approveDatetime
+    domain: 日時
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: 2024-01-01T11:07:31
+    description: 承認した日時
+  - name_jp: 社員番号
+    name_en: emploeeNo
+    domain: NOKEY
+    reg_ex: null
+    min_digits: 4
+    max_digits: 4
+    min_value: null
+    max_value: null
+    example: "0012"
+    description: 社員番号
+  - name_jp: ログID
+    name_en: logId
+    domain: UUID
+    reg_ex: null
+    min_digits: null
+    max_digits: null
+    min_value: null
+    max_value: null
+    example: ede66c43-9b9d-4222-93ed-5f11c96e08e2
+    description: ログのID
+delive_elements:
+  - origin: 定価
+    name_jp: キャンペーン定価
+    name_en: campanePrice
+    description: キャンペーンの定価
+  - origin: ユーザーID
+    name_jp: 受注担当者ID
+    name_en: orderPIC
+    description: 受注担当者のユーザーID
+  - origin: ユーザーID
+    name_jp: 商品担当者ID
+    name_en: productPIC
+    description: 商品管理者のユーザーID
+  - origin: 部署
+    name_jp: 売上計上部署
+    name_en: saleseDepartment
+    description: 売上計上部署
+segments:
+  - key: 商品区分
+    value: NO_CHECKED
+    name: 未確認
+    description: 未確認商品
+  - key: 商品区分
+    value: NORMAL
+    name: 通常
+    description: 通常商品
+  - key: 商品区分
+    value: CHANGED
+    name: 変更
+    description: 他商品に変更
+  - key: 商品区分
+    value: STOPPED
+    name: 中止
+    description: 販売中止品
+  - key: 部署
+    value: RECEIVING
+    name: 受注部
+    description: 受注・発送
+  - key: 部署
+    value: ORDERING
+    name: 発注部
+    description: 発注・仕入
+  - key: 部署
+    value: PRODUCTS
+    name: 商品部
+    description: 検品・入出庫
+  - key: 部署
+    value: OVERSEAS
+    name: 海外部
+    description: 海外業務
+  - key: 部署
+    value: ACCOUNTING
+    name: 経理部
+    description: 経理業務
+  - key: 取引先区分
+    value: LOYAL
+    name: お得意様
+    description: お得意様
+  - key: 取引先区分
+    value: STANDARD
+    name: 通常
+    description: 通常得意先
+  - key: 取引先区分
+    value: TRIAL
+    name: 新規顧客
+    description: 新規顧客
+  - key: 取引先区分
+    value: NOT_TRADE
+    name: 取引停止
+    description: 取引停止
