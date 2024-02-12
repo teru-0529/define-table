@@ -47,6 +47,17 @@ Public Function getVersion() As String
   getVersion = Process.outerExec("version")
 End Function
 
+'// 項目定義の更新日時を記録
+Public Sub setModifyDatetime()
+  ThisWorkbook.Names.Add name:="CURRENT_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
+End Sub
+
+'// 項目定義の更新日時が最新かどうかをチェック
+Public Function isUpdateModifyDatetime() As Boolean
+  ThisWorkbook.Names.Add name:="MODIFY_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
+  isUpdateModifyDatetime = ThisWorkbook.Names("CURRENT_DATETIME") <> ThisWorkbook.Names("MODIFY_DATETIME")
+End Function
+
 '// 開発モードの場合にTrue
 Public Function isDevelop() As Boolean
   isDevelop = OPERATION_MODE = "develop"
@@ -98,9 +109,21 @@ Private Function getIniValue(ByVal base As String, ByVal key As String, ByVal pa
   getIniValue = Trim(Left(temp, InStr(temp, vbNullChar) - 1))
 End Function
 
+'// 絶対パスを取得
 Private Function absPath(ByVal path) As String
-  '// 絶対パスを取得
   absPath = CreateObject("Scripting.FileSystemObject").BuildPath(ThisWorkbook.path, path)
 End Function
 
+'// 更新日時取得
+Private Function getModifyTime(ByVal path As String) As String
+  If CreateObject("Scripting.FileSystemObject").fileexists(path) = False Then
+    MsgBox "[" & path & "] は存在しません。"
+    getModifyTime = ""
+    Exit Function
+  End If
 
+  getModifyTime = CreateObject("Scripting.FileSystemObject").getFile(path).dateLastModified
+
+  Debug.Print "[modifyTime] path:" & path
+  Debug.Print "[modifyTime] time:" & getModifyTime
+End Function

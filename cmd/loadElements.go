@@ -39,7 +39,7 @@ var loadElementsCmd = &cobra.Command{
 }
 
 func init() {
-	loadElementsCmd.Flags().StringVarP(&elementsFile, "elements-file", "I", "", "input file name")
+	loadElementsCmd.Flags().StringVarP(&elementsFile, "elements-file", "I", "", "input file name.")
 
 	loadElementsCmd.MarkFlagRequired("elements-file")
 }
