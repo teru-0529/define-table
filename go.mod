@@ -1,4 +1,4 @@
-module github.com/teru-0529/define-table
+module github.com/teru-0529/define-table/v3
 
 go 1.21.5
 
