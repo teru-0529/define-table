@@ -15,9 +15,8 @@ Dim startTime As Double
 Private Sub Workbook_Activate()
   Application.ScreenUpdating = False
   If is_update_modify_datetime() Then
-    'MsgBox outerExec("loadElements -I C:\Users\andre\.local\share\go\workspace\define-table\save_data_elm.yaml")
-
-    Call elements.load_(adLF)
+    '// 項目定義の呼び出し
+    Call elements.load(outerExec("loadElements -I " & ELEMENTS_DATA))
     Call set_modify_datetime
     Debug.Print "Updated!"
   End If
@@ -36,7 +35,8 @@ Private Sub Workbook_Open()
   Application.ScreenUpdating = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '業務ロジック
-  Call elements.load_(adLF)
+  '// 項目定義の呼び出し
+  Call elements.load(outerExec("loadElements -I " & ELEMENTS_DATA))
   Call set_modify_datetime
   
   Call read_write_files.load_(adLF)
