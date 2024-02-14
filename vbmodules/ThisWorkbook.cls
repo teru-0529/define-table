@@ -47,6 +47,8 @@ Private Sub Workbook_Open()
   Application.ScreenUpdating = True
   Application.StatusBar = False
 
+  Debug.Print "[operationMode] " & Config.OPERATION_MODE
+  Debug.Print Config.getFullVersion
   Call showTime(Timer - startTime)
   MsgBox Config.getFullVersion()
 End Sub
@@ -62,9 +64,8 @@ End Sub
 
 ' 保存時
 Private Sub Workbook_AfterSave(ByVal Success As Boolean)
-  Dim start_time As Double
-  start_time = Timer
-
+  Dim message As String
+  
   '// パス情報の取得
   Call Config.init("vba.ini")
 
@@ -77,11 +78,10 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
     Call index_sht.save_(adLF)
     Call index_sht.out_ddl(adLF)
     Call index_sht.out_view_md(adLF)
-    Call showTime(Timer - start_time)
-    MsgBox "Git管理用ファイル、DDLを作成しました。"
+    message = "Git管理用ファイル、DDLを作成しました。"
 
   Else
-    MsgBox "何らかのエラーがあるため、出力ファイルの保存ができませんでした。"
+    message = "何らかのエラーがあるため、出力ファイルの保存ができませんでした。"
 
   End If
 
@@ -89,7 +89,10 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Application.ScreenUpdating = True
   Application.StatusBar = False
 
+  Debug.Print "[operationMode] " & Config.OPERATION_MODE
   '// 開発モードの場合、モジュールを出力
   If Config.isDevelop() Then Call ExportModule.SaveModule
   Debug.Print Config.getFullVersion
+  Call showTime(Timer - startTime)
+  MsgBox message
 End Sub
