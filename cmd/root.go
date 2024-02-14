@@ -43,6 +43,7 @@ func init() {
 	// サブコマンドの追加
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(loadElementsCmd)
+	rootCmd.AddCommand(convertCmd)
 
 	// TODO:cofigファイルの定義(viper)は未整備
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.define-monad.yaml)")
