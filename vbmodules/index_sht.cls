@@ -25,7 +25,8 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
 End Sub
 
 Public Sub clear()
-  Range("テーブル一覧JP").Offset(, -1).Resize(, 4).ClearContents
+  'Range("テーブル一覧JP").Offset(, -1).Resize(, 4).ClearContents
+  Range("DATA_AREA").ClearContents
 End Sub
 
 ' 新規テーブルの作成

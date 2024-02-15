@@ -1,7 +1,6 @@
 Attribute VB_Name = "Formatter"
 Option Explicit
 
-
 Public Const IME_MODE_ON = True
 Public Const IME_MODE_OFF = False
 

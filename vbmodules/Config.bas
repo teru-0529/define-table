@@ -74,9 +74,11 @@ Public Sub init(ByVal iniFile As String)
   Debug.Print "|----|---- configuration setup start ----|----|"
 
   SCHEMA_JP = getIniValue("schema", "nameJp", iniPath)
+  Range("SCHEMA_JP").value = SCHEMA_JP
   Debug.Print "[config] SCHEMA_JP: " & SCHEMA_JP
   
   SCHEMA_EN = getIniValue("schema", "nameEn", iniPath)
+  Range("SCHEMA_EN").value = SCHEMA_EN
   Debug.Print "[config] SCHEMA_EN: " & SCHEMA_EN
 
   SAVE_DATA = absPath(getIniValue("Path", "saveData", iniPath))

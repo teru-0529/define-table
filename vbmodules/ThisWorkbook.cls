@@ -95,4 +95,8 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Debug.Print Config.getFullVersion
   Call showTime(Timer - startTime)
   MsgBox message
+  
+  Dim a As String
+  a = outerExec("load -D " & ThisWorkbook.path & "\v3.yaml")
+  MsgBox a
 End Sub

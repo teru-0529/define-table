@@ -24,6 +24,10 @@ End Enum
   
 Const max_field_col = 9
 
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+  '// ペースト無効
+'  Application.CutCopyMode = False
+End Sub
 
 Private Sub Worksheet_BeforeDelete()
   Dim Target As Range
@@ -323,4 +327,3 @@ Private Function check_constraint(val As String) As String
     check_constraint = " check " & val
   End If
 End Function
-

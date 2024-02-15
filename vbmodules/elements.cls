@@ -51,16 +51,16 @@ Private Sub areaFormat()
   Application.EnableEvents = False
 
   '// ògê¸
-  Call Formatter.borderAndFontsize(Range("ELEM_FULL"))
+  Call Formatter.borderAndFontsize(Range("DATA_AREA"))
 
   '// îwåiêF
-  Call Formatter.notInput(Range("ELEM_FULL"))
+  Call Formatter.notInput(Range("DATA_AREA"))
 
   '// ï\é¶å`éÆ
-  Call Formatter.formatLocal(Range("ELEM_H"), """Åõ"";;;")
+  Call Formatter.formatLocal(Range("DATA_AREA_H"), """Åõ"";;;")
 
   '// ï\é¶å`éÆ
-  Call Formatter.horizontalPosition(Range("ELEM_H"), xlCenter)
+  Call Formatter.horizontalPosition(Range("DATA_AREA_H"), xlCenter)
 
   Application.EnableEvents = True
 End Sub
