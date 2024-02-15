@@ -13,9 +13,7 @@ Public Function create_table_sheet(calling_sht As Worksheet, table_no As Long, n
   new_sht.name = name_jp
   
   'テーブル名登録
-  new_sht.Range("テーブルNo").value = table_no
-  'new_sht.Range("テーブルJP").value = name_jp
-  'new_sht.Range("テーブルEN").value = name_en
+  new_sht.Range("TABLE_NO").value = table_no
   
   calling_sht.Activate
   template.Visible = xlSheetHidden

@@ -29,19 +29,15 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
 '  Application.CutCopyMode = False
 End Sub
 
+'// テーブルシート削除イベント
 Private Sub Worksheet_BeforeDelete()
-  Dim Target As Range
-  Set Target = index_sht.Cells(Range("テーブルNo").value + 1, 3)
-  
-  Target.ClearContents
-  Target.Offset(, 3).ClearContents
+  index_sht.dropTable (Range("TABLE_NO").value)
   index_sht.Activate
-  
 End Sub
 
+'// 計算処理イベント
 Private Sub Worksheet_Calculate()
-  Dim sht As Worksheet: Set sht = ThisWorkbook.Worksheets(name)
-  Call Util.validate_sheet_color(sht, Range("エラーあり").value > 0)
+  Call Util.invalidTableSheet(ThisWorkbook.Worksheets(name), Range("ERRORS").value > 0)
 End Sub
 
 'セル値の変更があった場合
@@ -92,8 +88,8 @@ Public Sub save_(data() As String)
   Call push_array(data, "- ddl:")
   
   '基本情報
-  Call push_array(data, indent(2) & to_yaml("table_name_jp", Range("テーブルJP").value))
-  Call push_array(data, indent(2) & to_yaml("table_name_en", Range("テーブルEN").value))
+  Call push_array(data, indent(2) & to_yaml("table_name_jp", Range("TABLE_JP").value))
+  Call push_array(data, indent(2) & to_yaml("table_name_en", Range("TABLE_EN").value))
   Call push_array(data, "")
   
   'テーブル項目
@@ -151,7 +147,7 @@ Public Sub out_view_md(data() As String)
   Call push_array(data, "")
   
   '基本情報
-  Call push_array(data, "## #" & Range("テーブルNO").value & " " & Range("テーブルJP").value & " (" & Range("テーブルEN").value & ")")
+  Call push_array(data, "## #" & Range("TABLE_NO").value & " " & Range("TABLE_JP").value & " (" & Range("TABLE_EN").value & ")")
   Call push_array(data, "")
   
   'テーブル項目
@@ -183,7 +179,7 @@ Public Sub out_view_md(data() As String)
     For Each Target In Range("ユニーク_FORM")
       If Target.value Then
         i = i + 1
-        Call push_array(data, "##### " & Range("テーブルEN") & "_unique_" & i)
+        Call push_array(data, "##### " & Range("TABLE_EN") & "_unique_" & i)
         If Target.Offset(, -6).value <> "" Then Call push_array(data, "* " & Target.Offset(, -6).value)
         If Target.Offset(, -5).value <> "" Then Call push_array(data, "* " & Target.Offset(, -5).value)
         If Target.Offset(, -4).value <> "" Then Call push_array(data, "* " & Target.Offset(, -4).value)
@@ -202,13 +198,13 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   Dim data() As String, file_name As String, table_name As String, Target As Range, i As Long, j As Long
   Dim wk() As String
   
-  file_name = DDL_DIR & "\" & DDL_PREFIX & SCHEMA_EN & "_" & Range("テーブルEN").value & ".sql"
-  table_name = SCHEMA_EN & "." & Range("テーブルEN").value
+  file_name = DDL_DIR & "\" & DDL_PREFIX & SCHEMA_EN & "_" & Range("TABLE_EN").value & ".sql"
+  table_name = SCHEMA_EN & "." & Range("TABLE_EN").value
 
   Call push_array(data, "")
   
   '基本情報
-  Call push_array(data, "-- " & Range("テーブルNO").value & "." & Range("テーブルJP").value & "(" & Range("テーブルEN").value & ")")
+  Call push_array(data, "-- " & Range("TABLE_NO").value & "." & Range("TABLE_JP").value & "(" & Range("TABLE_EN").value & ")")
   Call push_array(data, "")
   
   'Create Table
@@ -273,7 +269,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   For Each Target In Range("ユニーク_FORM")
     If Target.value Then
       i = i + 1
-      Call push_array(data, "ALTER TABLE " & table_name & " ADD CONSTRAINT " & Range("テーブルEN") & "_unique_" & i & " UNIQUE (")
+      Call push_array(data, "ALTER TABLE " & table_name & " ADD CONSTRAINT " & Range("TABLE_EN") & "_unique_" & i & " UNIQUE (")
       
       '一度wkに入れる（最後だけカンマつけたくないため）
       For j = -6 To -2
@@ -294,7 +290,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   
   'Create set_update_at Trigger
   Call push_array(data, "-- Create 'set_update_at' Trigger")
-  Call push_array(data, "CREATE TRIGGER " & Range("テーブルEN").value & "_updated")
+  Call push_array(data, "CREATE TRIGGER " & Range("TABLE_EN").value & "_updated")
   Call push_array(data, indent(1) & "BEFORE UPDATE")
   Call push_array(data, indent(1) & "ON " & table_name)
   Call push_array(data, indent(1) & "FOR EACH ROW")

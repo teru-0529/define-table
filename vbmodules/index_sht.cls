@@ -25,8 +25,11 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
 End Sub
 
 Public Sub clear()
-  'Range("テーブル一覧JP").Offset(, -1).Resize(, 4).ClearContents
   Range("DATA_AREA").ClearContents
+End Sub
+
+Public Sub dropTable(ByVal rowNo As Long)
+  Util.unionRange(Range("BASE_CELL").Offset(rowNo), Range("BASE_CELL").Offset(rowNo, 3)).ClearContents
 End Sub
 
 ' 新規テーブルの作成
@@ -40,7 +43,7 @@ Public Function create_table_sheet(Targer As Range) As Worksheet
   'ハイパーリンク設定
   Hyperlinks.Add Anchor:=Targer.Offset(, 1), Address:="", SubAddress:="'" & table_name_jp & "'!A1", TextToDisplay:=table_name_jp
   Targer.Offset(, 1).Font.Size = 9
-  Targer.Offset(, 4).Formula2R1C1 = "＝" & table_name_jp & "!エラーあり"
+  Targer.Offset(, 4).Formula2R1C1 = "＝" & table_name_jp & "!ERRORS"
 End Function
 
 
@@ -48,7 +51,7 @@ End Function
 Public Sub save_(ByVal line_sep As Integer)
   Dim data() As String, Target As Range
   
-  For Each Target In Range("テーブル一覧JP")
+  For Each Target In Range("DATA_AREA_JP")
     If Target.Offset(, 4).value Then Call Worksheets(Target.value).save_(data)
   Next
   
@@ -59,7 +62,7 @@ End Sub
 Public Sub out_ddl(ByVal line_sep As Integer)
   Dim Target As Range
   
-  For Each Target In Range("テーブル一覧JP")
+  For Each Target In Range("DATA_AREA_JP")
     If Target.Offset(, 4).value Then Call Worksheets(Target.value).out_ddl(line_sep)
   Next
   
@@ -74,7 +77,7 @@ Public Sub out_view_md(ByVal line_sep As Integer)
   Call push_array(data, "# テーブル定義")
   Call push_array(data, "----------")
   
-  For Each Target In Range("テーブル一覧JP")
+  For Each Target In Range("DATA_AREA_JP")
     If Target.Offset(, 4).value Then Call Worksheets(Target.value).out_view_md(data)
   Next
   
