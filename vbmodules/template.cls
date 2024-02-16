@@ -123,7 +123,7 @@ Public Sub save_(data() As String)
   
   'PK制約
   Call push_array(data, indent(2) & "primary_key:")
-  For Each Target In Range("PK項目FORM")
+  For Each Target In Range("PK_AREA")
     If Target.value <> "" Then
       Call push_array(data, indent(3) & "- " & Target.value)
     End If
@@ -184,7 +184,7 @@ Public Sub out_view_md(data() As String)
   
   Call push_array(data, "### table constraint")
   Call push_array(data, "#### primary key")
-  For Each Target In Range("PK項目FORM")
+  For Each Target In Range("PK_AREA")
     If Target.value <> "" Then
       Call push_array(data, "* " & Target.value)
     End If
@@ -266,7 +266,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   Call push_array(data, "ALTER TABLE " & table_name & " ADD PRIMARY KEY (")
   
   '一度wkに入れる（最後だけカンマつけたくないため）
-  For Each Target In Range("PK項目FORM")
+  For Each Target In Range("PK_AREA")
     If Target.value <> "" Then Call push_array(wk, indent(1) & Target.Offset(, 25).value)
   Next Target
   
