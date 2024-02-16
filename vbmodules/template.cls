@@ -138,11 +138,11 @@ Public Sub save_(data() As String)
     For Each Target In Range("ユニーク_FORM")
       If Target.value Then
         Call push_array(data, indent(4) & "- constraint:")
+        If Target.Offset(, -7).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -7).value)
         If Target.Offset(, -6).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -6).value)
         If Target.Offset(, -5).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -5).value)
         If Target.Offset(, -4).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -4).value)
         If Target.Offset(, -3).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -3).value)
-        If Target.Offset(, -2).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -2).value)
       End If
     Next
   End If
@@ -197,11 +197,11 @@ Public Sub out_view_md(data() As String)
       If Target.value Then
         i = i + 1
         Call push_array(data, "##### " & Range("TABLE_EN") & "_unique_" & i)
+        If Target.Offset(, -7).value <> "" Then Call push_array(data, "* " & Target.Offset(, -7).value)
         If Target.Offset(, -6).value <> "" Then Call push_array(data, "* " & Target.Offset(, -6).value)
         If Target.Offset(, -5).value <> "" Then Call push_array(data, "* " & Target.Offset(, -5).value)
         If Target.Offset(, -4).value <> "" Then Call push_array(data, "* " & Target.Offset(, -4).value)
         If Target.Offset(, -3).value <> "" Then Call push_array(data, "* " & Target.Offset(, -3).value)
-        If Target.Offset(, -2).value <> "" Then Call push_array(data, "* " & Target.Offset(, -2).value)
       End If
     Next
   End If
@@ -289,7 +289,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
       Call push_array(data, "ALTER TABLE " & table_name & " ADD CONSTRAINT " & Range("TABLE_EN") & "_unique_" & i & " UNIQUE (")
       
       '一度wkに入れる（最後だけカンマつけたくないため）
-      For j = -6 To -2
+      For j = -7 To -3
         If Target.Offset(, j).value <> "" Then Call push_array(wk, indent(1) & Target.Offset(, j + 25).value)
       Next j
       
