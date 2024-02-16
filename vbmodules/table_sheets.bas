@@ -1,6 +1,7 @@
 Attribute VB_Name = "table_sheets"
 Option Explicit
 
+  '// FIXME:★★★★★
 ' 新規テーブルシート作成
 Public Function create_table_sheet(calling_sht As Worksheet, table_no As Long, name_jp As String, name_en As String) As Worksheet
   Dim new_sht As Worksheet
@@ -37,4 +38,3 @@ Public Sub clear()
      End Select
   Next Target
 End Sub
-

@@ -15,6 +15,7 @@ Const COL_FORCE_NOTNULL = 8
 
 'カラム番号
 
+  '// FIXME:★★★★★
 Private Enum field_col_no
   NO = 1
   項目名JP = 2
@@ -31,7 +32,7 @@ Const max_field_col = 9
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
   '// ペースト無効
-'  Application.CutCopyMode = False
+  Application.CutCopyMode = False
 End Sub
 
 '// テーブルシート削除イベント
@@ -50,7 +51,8 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   Dim area As Range, elm As Range, i As Long
   
   Application.ScreenUpdating = False
-  
+  Application.EnableEvents = False
+
   '// FieldNameが変更された場合
   Set area = Intersect(Target, Range("FIELD_NAME"))
   If Not area Is Nothing Then
@@ -66,6 +68,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   '// フィールドリスト/NotNullリストの生成
   If Not Intersect(Target, Util.unionRange(Range("FIELD_NAME"), Range("FIELD_NN"))) Is Nothing Then Call createFieldList
   
+  Application.EnableEvents = True
   Application.ScreenUpdating = True
 End Sub
 
@@ -97,6 +100,7 @@ Private Sub createFieldList()
   Next src
 End Sub
 
+  '// FIXME:★★★★★
 '----+----+----+----+----+----+----+----+----+----+
 '出力
 Public Sub save_(data() As String)
@@ -132,17 +136,17 @@ Public Sub save_(data() As String)
   
   'ユニーク制約
   Call push_array(data, indent(2) & "unique:")
-  Call push_array(data, indent(3) & to_yaml("exists", Range("ユニーク_EXISTS").value))
-  If Range("ユニーク_EXISTS").value Then
+  Call push_array(data, indent(3) & to_yaml("exists", Range("UNIQUE_EXIST").value))
+  If Range("UNIQUE_EXIST").value Then
     Call push_array(data, indent(3) & "constraints:")
-    For Each Target In Range("ユニーク_FORM")
-      If Target.value Then
+    For Each Target In Range("UNIQUE_AREA")
+      If Target.value <> "" Then
         Call push_array(data, indent(4) & "- constraint:")
-        If Target.Offset(, -7).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -7).value)
         If Target.Offset(, -6).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -6).value)
         If Target.Offset(, -5).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -5).value)
         If Target.Offset(, -4).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -4).value)
         If Target.Offset(, -3).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -3).value)
+        If Target.Offset(, -2).value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -2).value)
       End If
     Next
   End If
@@ -158,6 +162,7 @@ Public Sub save_(data() As String)
   
 End Sub
 
+  '// FIXME:★★★★★
 Public Sub out_view_md(data() As String)
   Dim Target As Range, i As Long, is_not_null As Boolean, constraint As String
 
@@ -190,18 +195,18 @@ Public Sub out_view_md(data() As String)
     End If
   Next
   
-  If Range("ユニーク_EXISTS").value Then
+  If Range("UNIQUE_EXIST").value Then
     Call push_array(data, "#### unique")
     i = 0
-    For Each Target In Range("ユニーク_FORM")
-      If Target.value Then
+    For Each Target In Range("UNIQUE_AREA")
+      If Target.value <> "" Then
         i = i + 1
         Call push_array(data, "##### " & Range("TABLE_EN") & "_unique_" & i)
-        If Target.Offset(, -7).value <> "" Then Call push_array(data, "* " & Target.Offset(, -7).value)
         If Target.Offset(, -6).value <> "" Then Call push_array(data, "* " & Target.Offset(, -6).value)
         If Target.Offset(, -5).value <> "" Then Call push_array(data, "* " & Target.Offset(, -5).value)
         If Target.Offset(, -4).value <> "" Then Call push_array(data, "* " & Target.Offset(, -4).value)
         If Target.Offset(, -3).value <> "" Then Call push_array(data, "* " & Target.Offset(, -3).value)
+        If Target.Offset(, -2).value <> "" Then Call push_array(data, "* " & Target.Offset(, -2).value)
       End If
     Next
   End If
@@ -211,6 +216,7 @@ Public Sub out_view_md(data() As String)
 End Sub
 
 
+  '// FIXME:★★★★★
 Public Sub out_ddl(ByVal line_sep As Integer)
   Dim data() As String, file_name As String, table_name As String, Target As Range, i As Long, j As Long
   Dim wk() As String
@@ -281,15 +287,15 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   
   
   'Unique Constraint
-  If Range("ユニーク_EXISTS").value Then Call push_array(data, "-- Set Unique Constraint")
+  If Range("UNIQUE_EXIST").value Then Call push_array(data, "-- Set Unique Constraint")
   i = 0
-  For Each Target In Range("ユニーク_FORM")
-    If Target.value Then
+  For Each Target In Range("UNIQUE_AREA")
+    If Target.value <> "" Then
       i = i + 1
       Call push_array(data, "ALTER TABLE " & table_name & " ADD CONSTRAINT " & Range("TABLE_EN") & "_unique_" & i & " UNIQUE (")
       
       '一度wkに入れる（最後だけカンマつけたくないため）
-      For j = -7 To -3
+      For j = -6 To -2
         If Target.Offset(, j).value <> "" Then Call push_array(wk, indent(1) & Target.Offset(, j + 25).value)
       Next j
       
@@ -316,11 +322,13 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   Call text_io.plain_out(file_name, data, line_sep)
 End Sub
 
+  '// FIXME:★★★★★
 ' not null の文字列
 Private Function not_null_token(val As Long) As String
   If val = 1 Then not_null_token = " NOT NULL" Else not_null_token = ""
 End Function
 
+  '// FIXME:★★★★★
 ' defaultの文字列
 Private Function default_token(val As String, is_string_default As Boolean) As String
   If val = "" Then
@@ -332,6 +340,7 @@ Private Function default_token(val As String, is_string_default As Boolean) As S
   End If
 End Function
 
+  '// FIXME:★★★★★
 ' check制約 の文字列
 Private Function check_constraint(val As String) As String
   If val = "0" Then

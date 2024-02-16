@@ -1,6 +1,7 @@
 Attribute VB_Name = "Util"
 Option Explicit
 
+  '// FIXME:★★★★★
 Const NULL_VALUE = "null"
 
 '// タイマーの表示
@@ -58,6 +59,7 @@ Public Function unionRange(ByVal rng1 As Range, ByVal rng2 As Range) As Range
 End Function
 
 
+  '// FIXME:★★★★★
 Public Sub Print_Array(ByRef arr As Variant)
   Dim i As Long, d As String
     
@@ -78,12 +80,14 @@ Public Sub invalidTableSheet(ByVal sht As Worksheet, ByVal is_error As Boolean)
   End If
 End Sub
 
+  '// FIXME:★★★★★
 ' yaml 用のkey-value文字列を作成する（valueが空の場合はnull値に変換）
 Public Function to_yaml(ByVal key As String, ByVal value As String) As String
   to_yaml = key & ": "
   If value = "" Then to_yaml = to_yaml & NULL_VALUE Else: to_yaml = to_yaml & value
 End Function
 
+  '// FIXME:★★★★★
 ' yaml 用のkey-value文字列からvalueを抽出する（valueがnull値の場合は空文字に変換）
 Public Function from_yaml(ByVal yaml As String) As String
   Dim val As String
@@ -98,6 +102,7 @@ Public Function from_yaml(ByVal yaml As String) As String
   If val = NULL_VALUE Then from_yaml = "" Else from_yaml = val
 End Function
 
+  '// FIXME:★★★★★
 Public Function indent(ByVal num As Integer) As String
   indent = String(num * YAML_INDENT_SPACE, " ")
 End Function

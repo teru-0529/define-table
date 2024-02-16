@@ -3,6 +3,7 @@ Option Explicit
 
 Const char_set = "UTF-8"
 
+  '// FIXME:★★★★★
 
 'プレーンテキスト入力
 Public Function plain_in(ByVal path As String, ByVal line_sep As Integer) As String()
@@ -41,6 +42,7 @@ Public Function plain_in(ByVal path As String, ByVal line_sep As Integer) As Str
 End Function
 
 
+  '// FIXME:★★★★★
 'プレーンテキスト出力
 Public Sub plain_out(ByVal path As String, ByRef data() As String, ByVal line_sep As Integer)
   Dim adoSt As Object, v_buf() As Byte, i As Long
@@ -77,23 +79,3 @@ Public Sub plain_out(ByVal path As String, ByRef data() As String, ByVal line_se
   Call Util.Print_Array(data)
 
 End Sub
-
-
-'更新日時取得
-Public Function modify_datetime(ByVal path As String) As String
-  Dim adoSt As Object, data() As String
-  Set adoSt = CreateObject("ADODB.Stream")
-  
-  If CreateObject("Scripting.FileSystemObject").fileexists(path) = False Then
-    MsgBox "[" & path & "] は存在しません。"
-    modify_datetime = ""
-    Exit Function
-  End If
-  
-  modify_datetime = CreateObject("Scripting.FileSystemObject").getFile(path).dateLastModified
-
-  Debug.Print "PATH:" & path
-  Debug.Print modify_datetime
-
-End Function
-

@@ -1,6 +1,7 @@
 Attribute VB_Name = "read_write_files"
 Option Explicit
 
+  '// FIXME:★★★★★
 'save_data.yaml読込
 Public Sub load_(ByVal line_sep As Integer)
   Dim data() As String, i As Long
@@ -29,6 +30,7 @@ Public Sub load_(ByVal line_sep As Integer)
   
 End Sub
 
+  '// FIXME:★★★★★
 'DDL単位の読込
 Private Sub load_elements(data() As String, table_no As Long, start_no As Long, end_no As Long)
   Dim elements() As String, i As Long
@@ -86,6 +88,7 @@ Private Sub load_elements(data() As String, table_no As Long, start_no As Long, 
 End Sub
 
 
+  '// FIXME:★★★★★
 'フィールドデータ登録
 Private Sub load_fields(target_sht As Worksheet, data() As String)
   Const PARAMS = 4
@@ -106,6 +109,7 @@ Private Sub load_fields(target_sht As Worksheet, data() As String)
   target_sht.Cells(6, 5).Resize(row_length, 2) = wk_range_2
 End Sub
 
+  '// FIXME:★★★★★
 'PKデータ登録
 Private Sub load_pk(target_sht As Worksheet, data() As String)
   Dim Target As Range, i As Long
@@ -117,6 +121,7 @@ Private Sub load_pk(target_sht As Worksheet, data() As String)
   Next
 End Sub
 
+  '// FIXME:★★★★★
 'unique constraintデータ登録
 Private Sub load_unique(target_sht As Worksheet, data() As String)
   Dim Target As Range, i As Long, x As Long, val As String
@@ -137,6 +142,7 @@ End Sub
 
 
 
+  '// FIXME:★★★★★
 'セパレート文字列の行番号
 Private Function get_sep_no(ByRef data() As String, find_val As String) As Long
   Dim i As Long

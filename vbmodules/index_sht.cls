@@ -32,6 +32,7 @@ Public Sub dropTable(ByVal rowNo As Long)
   Util.unionRange(Range("BASE_CELL").Offset(rowNo), Range("BASE_CELL").Offset(rowNo, 3)).ClearContents
 End Sub
 
+  '// FIXME:★★★★★
 ' 新規テーブルの作成
 Public Function create_table_sheet(Targer As Range) As Worksheet
   Dim table_name_jp As String, table_name_en As String
@@ -47,6 +48,7 @@ Public Function create_table_sheet(Targer As Range) As Worksheet
 End Function
 
 
+  '// FIXME:★★★★★
 'save_data.yaml.出力
 Public Sub save_(ByVal line_sep As Integer)
   Dim data() As String, Target As Range
@@ -58,6 +60,7 @@ Public Sub save_(ByVal line_sep As Integer)
   Call text_io.plain_out(SAVE_DATA, data, line_sep)
 End Sub
 
+  '// FIXME:★★★★★
 'ddl.出力
 Public Sub out_ddl(ByVal line_sep As Integer)
   Dim Target As Range
@@ -70,6 +73,7 @@ End Sub
 
 
 
+  '// FIXME:★★★★★
 'view_md.出力
 Public Sub out_view_md(ByVal line_sep As Integer)
   Dim data() As String, Target As Range
