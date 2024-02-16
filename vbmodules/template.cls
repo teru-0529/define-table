@@ -9,7 +9,12 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
+Const COL_NOTNULL = 5
+Const COL_DEFAULT = 6
+Const COL_FORCE_NOTNULL = 8
+
 'カラム番号
+
 Private Enum field_col_no
   NO = 1
   項目名JP = 2
@@ -42,40 +47,52 @@ End Sub
 
 'セル値の変更があった場合
 Private Sub Worksheet_Change(ByVal Target As Range)
-  Dim elm As Range, i As Long
-  If Not Intersect(Target, Range("テーブル項目FORM")) Is Nothing Then
+  Dim area As Range, elm As Range, i As Long
   
-    For Each elm In Intersect(Target, Range("テーブル項目FORM"))
+  Application.ScreenUpdating = False
+  
+  '// FieldNameが変更された場合
+  Set area = Intersect(Target, Range("FIELD_NAME"))
+  If Not area Is Nothing Then
+    For Each elm In area
       i = elm.Row
-      
-      Cells(i, NOTNULL).ClearContents
-      Cells(i, デフォルト値).ClearContents
-      '強制NOTNULLかどうか
-      If Cells(i, 強制NOTNULL).value = True Then Cells(i, NOTNULL).value = 1
-      
+      '// 入力値(NotNull、デフォルト値)のクリア
+      Util.unionRange(Cells(i, COL_NOTNULL), Cells(i, COL_DEFAULT)).ClearContents
+      '// 強制NOTNULLの設定
+      If Cells(i, COL_FORCE_NOTNULL).value = True Then Cells(i, COL_NOTNULL).value = 1
     Next
-    
-    'テーブル項目の再生成
-    Call reset_table_items
-    
-    
-
   End If
+  
+  '// フィールドリスト/NotNullリストの生成
+  If Not Intersect(Target, Util.unionRange(Range("FIELD_NAME"), Range("FIELD_NN"))) Is Nothing Then Call createFieldList
+  
+  Application.ScreenUpdating = True
 End Sub
 
-'テーブル項目の再登録
-Private Sub reset_table_items()
-  Dim Target As Range: Set Target = Range("テーブル項目START")
-  Dim src As Range
+'// フィールドリスト/NotNullリストの生成
+Private Sub createFieldList()
+  Dim baseField As Range, nnField As Range, src As Range
   
-  '列を消去
-  Target.EntireColumn.ClearContents
-  Target.value = "N/A"
+  '// リストのクリア
+  Range("FIELD_AREA").ClearContents
+  Range("FIELD_AREA").Resize(1).value = "N/A"
   
-  For Each src In Range("テーブル項目FORM")
+  '// 登録位置
+  Set baseField = Range("FIELD_AREA").Resize(1, 1)
+  Set nnField = baseField.Offset(, 1)
+  
+  For Each src In Range("FIELD_NAME")
     If src.value <> "" Then
-      Target.value = src.value
-      Set Target = Target.Offset(1)
+      '// フィールドリスト登録
+      baseField.value = src.value
+      Set baseField = baseField.Offset(1)
+        
+      If src.Offset(, 3).value = 1 Then
+        '// NotNullリスト登録
+        nnField.value = src.value
+        Set nnField = nnField.Offset(1)
+      End If
+    
     End If
   Next src
 End Sub
@@ -94,7 +111,7 @@ Public Sub save_(data() As String)
   
   'テーブル項目
   Call push_array(data, indent(2) & "fielsd:")
-  For Each Target In Range("テーブル項目FORM")
+  For Each Target In Range("FIELD_NAME")
     If Target.value <> "" Then
       i = Target.Row
       Call push_array(data, indent(3) & to_yaml("- name", Cells(i, 項目名JP).value))
@@ -154,7 +171,7 @@ Public Sub out_view_md(data() As String)
   Call push_array(data, "### fielsds")
   Call push_array(data, "| # | name_jp | name_en | model | not_null | default | field_constraint |")
   Call push_array(data, "| -- | -- | -- | -- | -- | -- | -- |")
-  For Each Target In Range("テーブル項目FORM")
+  For Each Target In Range("FIELD_NAME")
     If Target.value <> "" Then
       i = Target.Row
       is_not_null = Cells(i, NOTNULL).value = 1
@@ -212,7 +229,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   Call push_array(data, "DROP TABLE IF EXISTS " & table_name & " CASCADE;")
   Call push_array(data, "CREATE TABLE " & table_name & " (")
   
-  For Each Target In Range("テーブル項目FORM")
+  For Each Target In Range("FIELD_NAME")
     If Target.value <> "" Then
       i = Target.Row
       Call push_array(data, indent(1) & Cells(i, 項目名EN).value & " " & Cells(i, データ型).value & _
@@ -231,7 +248,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
 
   'Column Comment
   Call push_array(data, "-- Set Column Comment")
-  For Each Target In Range("テーブル項目FORM")
+  For Each Target In Range("FIELD_NAME")
     If Target.value <> "" Then
       i = Target.Row
       Call push_array(data, "COMMENT ON COLUMN " & table_name & "." & Cells(i, 項目名EN).value & " IS '" & Cells(i, 項目名JP).value & "';")
