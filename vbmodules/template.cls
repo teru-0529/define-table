@@ -77,6 +77,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     Call Tables.createFieldList(Worksheets(Name))
   
   Application.EnableEvents = True
+  Application.Calculate
   Application.ScreenUpdating = True
 End Sub
 

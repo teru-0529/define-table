@@ -76,6 +76,13 @@ Sub setFunction(ByRef area As Range, ByVal formula As String)
   Call notInput(area)
 End Sub
 
+'// ハイパーリンク設定
+Sub addLink(ByRef sht As Worksheet, ByRef area As Range, address As String, display As String)
+  If area Is Nothing Then Exit Sub
+  sht.Hyperlinks.Add Anchor:=area, address:="", SubAddress:=address, TextToDisplay:=display
+  area.Font.Size = 9
+End Sub
+
 '// 表示形式
 Sub formatLocal(ByRef area As Range, ByVal formula As String)
   If area Is Nothing Then Exit Sub

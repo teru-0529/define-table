@@ -1,7 +1,7 @@
 Attribute VB_Name = "Tables"
 Option Explicit
 
-' DDL用のシートを全て削除する
+'// DDL用のシートを全て削除する
 Public Sub Delete()
   Dim Target As Worksheet
 

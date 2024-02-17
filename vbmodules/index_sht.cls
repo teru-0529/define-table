@@ -65,17 +65,16 @@ End Sub
 
   '// FIXME:★★★★★
 ' 新規テーブルの作成
-Public Function create_table_sheet(Targer As Range) As Worksheet
+Public Function create_table_sheet(Target As Range) As Worksheet
   Dim table_name_jp As String, table_name_en As String
   
-  table_name_jp = Targer.Offset(, 2).Value
-  table_name_en = Targer.Offset(, 3).Value
-  Set create_table_sheet = table_sheets.create_table_sheet(Worksheets(index), Targer.Row - 1, table_name_jp, table_name_en)
+  table_name_jp = Target.Offset(, 2).Value
+  table_name_en = Target.Offset(, 3).Value
+  Set create_table_sheet = table_sheets.create_table_sheet(Worksheets(index), Target.Row - 1, table_name_jp, table_name_en)
   
   'ハイパーリンク設定
-  Hyperlinks.Add Anchor:=Targer.Offset(, 1), Address:="", SubAddress:="'" & table_name_jp & "'!A1", TextToDisplay:=table_name_jp
-  Targer.Offset(, 1).Font.Size = 9
-  Targer.Offset(, 4).Formula2R1C1 = "＝" & table_name_jp & "!ERRORS"
+  Call Formatter.addLink(index_sht, Target.Offset(, 1), "'" & table_name_jp & "'!A1", table_name_jp)
+  Call Formatter.setFunction(Target.Offset(, 4), "＝" & table_name_jp & "!ERRORS")
 End Function
 
 

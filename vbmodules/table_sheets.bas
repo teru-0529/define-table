@@ -21,21 +21,3 @@ Public Function create_table_sheet(calling_sht As Worksheet, table_no As Long, n
   
   Set create_table_sheet = new_sht
 End Function
-
-' DDL用のシートをクリアする
-Public Sub clear()
-  Dim Target As Worksheet
-
-  For Each Target In Worksheets
-    Select Case Target.Name
-      Case elements.Name, index_sht.Name, template.Name, work.Name
-
-      Case Else
-        Application.DisplayAlerts = False
-        Target.Delete
-        Application.DisplayAlerts = True
-        
-     End Select
-  Next Target
-End Sub
-
