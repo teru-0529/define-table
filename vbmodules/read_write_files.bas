@@ -43,7 +43,6 @@ Private Sub load_elements(data() As String, table_no As Long, start_no As Long, 
   Next i
   
   Set target_index_Jp = index_sht.Cells(2, 4).Offset(table_no)
-  'Set target_index_Jp = index_sht.Range("ƒe[ƒuƒ‹ˆê——START").Offset(table_no)
   target_index_Jp.Value = from_yaml(elements(0))
   target_index_Jp.Offset(, 1).Value = from_yaml(elements(1))
   

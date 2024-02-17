@@ -31,25 +31,29 @@ End Sub
 
 '// データLoad(From yaml)
 Public Sub load(ByVal data As String)
-  Dim records() As String
-  Dim i As Long, rowLength As Long
+  Const DELIM1 = "*1*"
+  Dim records() As String, bases() As String
+  Dim i As Long
+  Dim table As Worksheet
 
   '// 初期化
-  'Call init
+  Call init
 
   '// 行ごとのデータに分割
   records = Split(data, vbLf)
-  rowLength = UBound(records)
 
-    Debug.Print rowLength
+  '// テーブル名を取得し、シート作成
+  For i = 0 To UBound(records) - 1
+    '// [tableJp]<tab>[tableEn]<tab>[isMaster]<DELIM1>[Fields]<DELIM1>...
+    bases = Split(Split(records(i), DELIM1)(0), vbTab)
 
-  '// 列ごとの配列に変換
-  For i = 0 To rowLength - 1
-    Debug.Print records(i)
-    Debug.Print ""
+    Cells(i + 2, 4).Value = bases(0) ' tableJp
+    Cells(i + 2, 5).Value = bases(1) ' tableEn
+    Set table = index_sht.createTable(Cells(i + 2, 4))
+    
+    '// データロード
+    Call Tables.load(table, records(i))
   Next i
-
-'Debug.Print data
 End Sub
 
 '// 初期化処理（☆☆☆）

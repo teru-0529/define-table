@@ -36,6 +36,14 @@ Public Sub Delete()
   Next Target
 End Sub
 
+'// データLoad(From yaml)
+Public Sub load(sht As Worksheet, data As String)
+  
+  Debug.Print sht.Name
+  Debug.Print data
+  Debug.Print ""
+End Sub
+
 '// フィールドリスト/NotNullリストの生成
 Public Sub createFieldList(sht As Worksheet)
   Dim baseField As Range, nnField As Range, src As Range
