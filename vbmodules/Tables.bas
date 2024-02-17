@@ -1,6 +1,24 @@
 Attribute VB_Name = "Tables"
 Option Explicit
 
+'// DDL用のシートを作成する
+Public Function Create(tableNo As Long, tableName As String) As Worksheet
+  Dim new_sht As Worksheet
+  
+  template.Visible = xlSheetVisible
+  
+  '// 最後尾にテンプレートをコピー
+  template.Copy After:=Worksheets(Worksheets.Count)
+  Set Create = ActiveSheet
+  Create.Name = tableName
+  
+  '// テーブル番号登録
+  Create.Range("TABLE_NO").Value = tableNo
+  
+  index_sht.Activate
+  template.Visible = xlSheetHidden
+End Function
+
 '// DDL用のシートを全て削除する
 Public Sub Delete()
   Dim Target As Worksheet

@@ -42,10 +42,12 @@ Private Sub load_elements(data() As String, table_no As Long, start_no As Long, 
     If i > start_no And i < end_no Then Call push_array(elements, data(i))
   Next i
   
-  Set target_index_Jp = index_sht.Range("テーブル一覧START").Offset(table_no)
+  Set target_index_Jp = index_sht.Cells(2, 4).Offset(table_no)
+  'Set target_index_Jp = index_sht.Range("テーブル一覧START").Offset(table_no)
   target_index_Jp.Value = from_yaml(elements(0))
   target_index_Jp.Offset(, 1).Value = from_yaml(elements(1))
-  Set target_sht = index_sht.create_table_sheet(target_index_Jp.Offset(, -2))
+  
+  Set target_sht = index_sht.createTable(target_index_Jp)
   
   '区切り文字の行番号
   s1 = get_sep_no(elements, "    primary_key:")

@@ -11,7 +11,7 @@ Option Explicit
 
 ' ダブルクリック時の処理（新規テーブル作成）
 Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
-  Dim rc As Integer, temp As Worksheet
+  Dim rc As Integer
 
   '「シート作成」のセルが対象の場合のみ処理する
   If Target.Column = 2 And Target.Value = 1 Then
@@ -19,7 +19,7 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
   
     Application.ScreenUpdating = False
     Application.EnableEvents = False
-    If rc = vbYes Then Set temp = create_table_sheet(Target)
+    If rc = vbYes Then Call createTable(Target.Offset(, 2))
     Application.EnableEvents = True
     Application.Calculate
     Application.ScreenUpdating = True
@@ -58,24 +58,22 @@ Public Sub init()
   Tables.Delete
 End Sub
 
+'// テーブル作成
+Public Function createTable(ByRef tableName As Range) As Worksheet
+  
+  '// シート作成
+  Set createTable = Tables.Create(tableName.Row - 1, tableName.Value)
+  
+  '// ハイパーリンク設定
+  Call Formatter.addLink(index_sht, tableName.Offset(, -1), "'" & tableName.Value & "'!A1", tableName.Value)
+  Call Formatter.setFunction(tableName.Offset(, 2), "＝" & tableName.Value & "!ERRORS")
+End Function
+
 '// テーブル削除
 Public Sub dropTable(ByVal tableNo As Long)
   Util.unionRange(Cells(tableNo + 1, 3), Cells(tableNo + 1, 6)).ClearContents
 End Sub
 
-  '// FIXME:★★★★★
-' 新規テーブルの作成
-Public Function create_table_sheet(Target As Range) As Worksheet
-  Dim table_name_jp As String, table_name_en As String
-  
-  table_name_jp = Target.Offset(, 2).Value
-  table_name_en = Target.Offset(, 3).Value
-  Set create_table_sheet = table_sheets.create_table_sheet(Worksheets(index), Target.Row - 1, table_name_jp, table_name_en)
-  
-  'ハイパーリンク設定
-  Call Formatter.addLink(index_sht, Target.Offset(, 1), "'" & table_name_jp & "'!A1", table_name_jp)
-  Call Formatter.setFunction(Target.Offset(, 4), "＝" & table_name_jp & "!ERRORS")
-End Function
 
 
   '// FIXME:★★★★★
