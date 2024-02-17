@@ -99,5 +99,5 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Call showTime(Timer - startTime)
   MsgBox message
   
-  Call index_sht.load(outerExec("load -D " & ThisWorkbook.path & "\v3.yaml"))
+  'Call index_sht.load(outerExec("load -D " & ThisWorkbook.path & "\v3.yaml"))
 End Sub
