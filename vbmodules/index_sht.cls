@@ -17,7 +17,12 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
   If Target.Column = 2 And Target.Value = 1 Then
     rc = MsgBox("テーブルシートを作成します。よろしいですか？", vbYesNo + vbQuestion, "作成確認")
   
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
     If rc = vbYes Then Set temp = create_table_sheet(Target)
+    Application.EnableEvents = True
+    Application.Calculate
+    Application.ScreenUpdating = True
   End If
   
   Cancel = True
@@ -26,20 +31,36 @@ End Sub
 
 '// データLoad(From yaml)
 Public Sub load(ByVal data As String)
+  Dim records() As String
+  Dim i As Long, rowLength As Long
 
   '// 初期化
-  'Call clear
-  'Call table_sheets.clear
+  'Call init
 
-Debug.Print data
+  '// 行ごとのデータに分割
+  records = Split(data, vbLf)
+  rowLength = UBound(records)
+
+    Debug.Print rowLength
+
+  '// 列ごとの配列に変換
+  For i = 0 To rowLength - 1
+    Debug.Print records(i)
+    Debug.Print ""
+  Next i
+
+'Debug.Print data
 End Sub
 
-Public Sub clear()
+'// 初期化処理（☆☆☆）
+Public Sub init()
   Range("DATA_AREA").ClearContents
+  Tables.Delete
 End Sub
 
-Public Sub dropTable(ByVal rowNo As Long)
-  Util.unionRange(Range("BASE_CELL").Offset(rowNo), Range("BASE_CELL").Offset(rowNo, 3)).ClearContents
+'// テーブル削除
+Public Sub dropTable(ByVal tableNo As Long)
+  Util.unionRange(Cells(tableNo + 1, 3), Cells(tableNo + 1, 6)).ClearContents
 End Sub
 
   '// FIXME:★★★★★

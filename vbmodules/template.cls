@@ -37,7 +37,7 @@ End Sub
 
 '// テーブルシート削除イベント
 Private Sub Worksheet_BeforeDelete()
-  index_sht.dropTable (Range("TABLE_NO").Value)
+  Call index_sht.dropTable(Range("TABLE_NO").Value)
   index_sht.Activate
 End Sub
 

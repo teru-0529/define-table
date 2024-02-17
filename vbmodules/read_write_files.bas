@@ -7,9 +7,7 @@ Public Sub load_(ByVal line_sep As Integer)
   Dim data() As String, i As Long
   Dim sep_nos() As Long
   
-  Call index_sht.clear
-  Call table_sheets.clear
-  
+  Call index_sht.init
   
   data = text_io.plain_in(SAVE_DATA, line_sep)
 
