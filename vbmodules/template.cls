@@ -73,39 +73,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   End If
   
   '// フィールドリスト/NotNullリストの生成
-  If Not Intersect(Target, Util.unionRange(Range("FIELD_NAME"), Range("FIELD_NN"))) Is Nothing Then Call createFieldList
+  If Not Intersect(Target, Util.unionRange(Range("FIELD_NAME"), Range("FIELD_NN"))) Is Nothing Then _
+    Call Tables.createFieldList(Worksheets(name))
   
   Application.EnableEvents = True
   Application.ScreenUpdating = True
 End Sub
 
-'// フィールドリスト/NotNullリストの生成
-Private Sub createFieldList()
-  Dim baseField As Range, nnField As Range, src As Range
-  
-  '// リストのクリア
-  Range("FIELD_AREA").ClearContents
-  Range("FIELD_AREA").Resize(1).value = "N/A"
-  
-  '// 登録位置
-  Set baseField = Range("FIELD_AREA").Resize(1, 1)
-  Set nnField = baseField.Offset(, 1)
-  
-  For Each src In Range("FIELD_NAME")
-    If src.value <> "" Then
-      '// フィールドリスト登録
-      baseField.value = src.value
-      Set baseField = baseField.Offset(1)
-        
-      If src.Offset(, 3).value = 1 Then
-        '// NotNullリスト登録
-        nnField.value = src.value
-        Set nnField = nnField.Offset(1)
-      End If
-    
-    End If
-  Next src
-End Sub
+
 
   '// FIXME:★★★★★
 '----+----+----+----+----+----+----+----+----+----+

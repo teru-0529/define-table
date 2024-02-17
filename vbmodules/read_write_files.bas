@@ -77,6 +77,8 @@ Private Sub load_elements(data() As String, table_no As Long, start_no As Long, 
     Erase wk
   End If
   
+  Call Tables.createFieldList(target_sht)
+  
   
   'Debug.Print wk(0)
   'Debug.Print UBound(wk)

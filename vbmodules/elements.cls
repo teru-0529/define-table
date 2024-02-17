@@ -48,7 +48,6 @@ End Sub
 
 '// フォーマット
 Private Sub areaFormat()
-  Application.EnableEvents = False
 
   '// 枠線
   Call Formatter.borderAndFontsize(Range("DATA_AREA"))
@@ -62,5 +61,4 @@ Private Sub areaFormat()
   '// 表示形式
   Call Formatter.horizontalPosition(Range("DATA_AREA_H"), xlCenter)
 
-  Application.EnableEvents = True
 End Sub
