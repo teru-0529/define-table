@@ -122,7 +122,7 @@ Public Sub save_(data() As String)
   Call push_array(data, indent(3) & to_yaml("exists", Range("UNIQUE_EXIST").Value))
   If Range("UNIQUE_EXIST").Value Then
     Call push_array(data, indent(3) & "constraints:")
-    For Each Target In Range("UNIQUE_AREA")
+    For Each Target In Range("UNIQUE_LIST")
       If Target.Value <> "" Then
         Call push_array(data, indent(4) & "- constraint:")
         If Target.Offset(, -6).Value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -6).Value)
@@ -181,7 +181,7 @@ Public Sub out_view_md(data() As String)
   If Range("UNIQUE_EXIST").Value Then
     Call push_array(data, "#### unique")
     i = 0
-    For Each Target In Range("UNIQUE_AREA")
+    For Each Target In Range("UNIQUE_LIST")
       If Target.Value <> "" Then
         i = i + 1
         Call push_array(data, "##### " & Range("TABLE_EN") & "_unique_" & i)
@@ -272,7 +272,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   'Unique Constraint
   If Range("UNIQUE_EXIST").Value Then Call push_array(data, "-- Set Unique Constraint")
   i = 0
-  For Each Target In Range("UNIQUE_AREA")
+  For Each Target In Range("UNIQUE_LIST")
     If Target.Value <> "" Then
       i = i + 1
       Call push_array(data, "ALTER TABLE " & table_name & " ADD CONSTRAINT " & Range("TABLE_EN") & "_unique_" & i & " UNIQUE (")

@@ -37,11 +37,53 @@ Public Sub Delete()
 End Sub
 
 '// データLoad(From yaml)
-Public Sub load(sht As Worksheet, data As String)
+Public Sub load(sht As Worksheet, record As String)
+  Const DELIM1 = "*1*"
+  Const DELIM2 = "*2*"
+  Dim i As Long, j As Long
+  Dim data() As String, fields() As String, field() As String, pk() As String, uniques() As String, unique() As String
+  
+  '// [tableJp]<tab>[tableEn]<tab>[isMaster]<DELIM1>[Fields]<DELIM1>...
+  data = Split(record, DELIM1)
+  
+  '// base
+  sht.Range("IS_MASTER").Value = Split(data(0), vbTab)(2) ' isMaster
   
   Debug.Print sht.Name
-  Debug.Print data
-  Debug.Print ""
+  
+  '// fields
+  '// [fieldName]<tab>[notNull]<tab>[default]<DELIM2>[fieldName]<tab>[notNull]...
+  Debug.Print data(1)
+  fields = Split(data(1), DELIM2)
+  For i = 0 To UBound(fields)
+    field = Split(fields(i), vbTab)
+    sht.Range("FIELD_NAME").Resize(1).Offset(i).Value = field(0)
+    sht.Range("FIELD_NAME").Resize(1).Offset(i, 3).Value = field(1)
+    sht.Range("FIELD_NAME").Resize(1).Offset(i, 4).Value = field(2)
+  Next i
+  
+  '// pk
+  '// [fieldName]<tab>[fieldName]<tab>[fieldName]...
+  Debug.Print data(2)
+  pk = Split(data(2), vbTab)
+  For i = 0 To UBound(pk)
+    sht.Range("PK_AREA").Resize(, 1).Offset(, i).Value = pk(i)
+  Next i
+  
+  '// uniques
+  '// [fieldName]<tab>[fieldName]<tab>[fieldName]<DELIM2>[fieldName]<DELIM2>[fieldName]<tab>[fieldName]...
+  Debug.Print data(3)
+  If Len(data(3)) > 0 Then
+    uniques = Split(data(3), DELIM2)
+    For i = 0 To UBound(uniques)
+      unique = Split(uniques(i), vbTab)
+      For j = 0 To UBound(unique)
+        sht.Range("UNIQUE_AREA").Resize(1, 1).Offset(i, j).Value = unique(j)
+      Next j
+    Next i
+  End If
+  
+  Call createFieldList(sht)
 End Sub
 
 '// フィールドリスト/NotNullリストの生成
