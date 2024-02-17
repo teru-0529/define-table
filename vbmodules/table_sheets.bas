@@ -11,10 +11,10 @@ Public Function create_table_sheet(calling_sht As Worksheet, table_no As Long, n
   '最後尾にテンプレートをコピー
   template.Copy After:=Worksheets(Worksheets.Count)
   Set new_sht = ActiveSheet
-  new_sht.name = name_jp
+  new_sht.Name = name_jp
   
   'テーブル名登録
-  new_sht.Range("TABLE_NO").value = table_no
+  new_sht.Range("TABLE_NO").Value = table_no
   
   calling_sht.Activate
   template.Visible = xlSheetHidden
@@ -27,8 +27,8 @@ Public Sub clear()
   Dim Target As Worksheet
 
   For Each Target In Worksheets
-    Select Case Target.name
-      Case elements.name, index_sht.name, template.name, work.name
+    Select Case Target.Name
+      Case elements.Name, index_sht.Name, template.Name, work.Name
 
       Case Else
         Application.DisplayAlerts = False

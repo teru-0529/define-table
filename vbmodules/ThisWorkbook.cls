@@ -36,6 +36,7 @@ Private Sub Workbook_Open()
   Call Config.init("vba.ini")
 
   Application.ScreenUpdating = False
+  Application.EnableEvents = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '// 項目定義の取得
   Call elements.load(outerExec("loadElements -I " & ELEMENTS_DATA))
@@ -44,6 +45,8 @@ Private Sub Workbook_Open()
   '// FIXME:★★★★★
   Call read_write_files.load_(adLF)
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  Application.EnableEvents = True
+  Application.Calculate
   Application.ScreenUpdating = True
   Application.StatusBar = False
 
@@ -74,7 +77,7 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   '業務ロジック
 
   '// FIXME:★★★★★
-  If index_sht.Range("SAVE_OK").value Then
+  If index_sht.Range("SAVE_OK").Value Then
     Call index_sht.save_(adLF)
     Call index_sht.out_ddl(adLF)
     Call index_sht.out_view_md(adLF)
@@ -96,7 +99,5 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Call showTime(Timer - startTime)
   MsgBox message
   
-  Dim a As String
-  a = outerExec("load -D " & ThisWorkbook.path & "\v3.yaml")
-  MsgBox a
+  Call index_sht.load(outerExec("load -D " & ThisWorkbook.path & "\v3.yaml"))
 End Sub

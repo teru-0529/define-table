@@ -82,9 +82,9 @@ End Sub
 
   '// FIXME:★★★★★
 ' yaml 用のkey-value文字列を作成する（valueが空の場合はnull値に変換）
-Public Function to_yaml(ByVal key As String, ByVal value As String) As String
+Public Function to_yaml(ByVal key As String, ByVal Value As String) As String
   to_yaml = key & ": "
-  If value = "" Then to_yaml = to_yaml & NULL_VALUE Else: to_yaml = to_yaml & value
+  If Value = "" Then to_yaml = to_yaml & NULL_VALUE Else: to_yaml = to_yaml & Value
 End Function
 
   '// FIXME:★★★★★

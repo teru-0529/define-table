@@ -45,8 +45,8 @@ Private Sub load_elements(data() As String, table_no As Long, start_no As Long, 
   Next i
   
   Set target_index_Jp = index_sht.Range("テーブル一覧START").Offset(table_no)
-  target_index_Jp.value = from_yaml(elements(0))
-  target_index_Jp.Offset(, 1).value = from_yaml(elements(1))
+  target_index_Jp.Value = from_yaml(elements(0))
+  target_index_Jp.Offset(, 1).Value = from_yaml(elements(1))
   Set target_sht = index_sht.create_table_sheet(target_index_Jp.Offset(, -2))
   
   '区切り文字の行番号
@@ -118,7 +118,7 @@ Private Sub load_pk(target_sht As Worksheet, data() As String)
 
   Set Target = target_sht.Cells(8, 12)
   For i = 0 To UBound(data)
-    Target.value = Mid(Trim(data(i)), 3)
+    Target.Value = Mid(Trim(data(i)), 3)
     Set Target = Target.Offset(, 1)
   Next
 End Sub
@@ -136,7 +136,7 @@ Private Sub load_unique(target_sht As Worksheet, data() As String)
       x = x + 1
       Set Target = target_sht.Cells(x, 12)
     Else
-      Target.value = val
+      Target.Value = val
       Set Target = Target.Offset(, 1)
     End If
   Next

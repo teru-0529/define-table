@@ -14,7 +14,7 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
   Dim rc As Integer, temp As Worksheet
 
   '「シート作成」のセルが対象の場合のみ処理する
-  If Target.Column = 2 And Target.value = 1 Then
+  If Target.Column = 2 And Target.Value = 1 Then
     rc = MsgBox("テーブルシートを作成します。よろしいですか？", vbYesNo + vbQuestion, "作成確認")
   
     If rc = vbYes Then Set temp = create_table_sheet(Target)
@@ -22,6 +22,16 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
   
   Cancel = True
 
+End Sub
+
+'// データLoad(From yaml)
+Public Sub load(ByVal data As String)
+
+  '// 初期化
+  'Call clear
+  'Call table_sheets.clear
+
+Debug.Print data
 End Sub
 
 Public Sub clear()
@@ -37,8 +47,8 @@ End Sub
 Public Function create_table_sheet(Targer As Range) As Worksheet
   Dim table_name_jp As String, table_name_en As String
   
-  table_name_jp = Targer.Offset(, 2).value
-  table_name_en = Targer.Offset(, 3).value
+  table_name_jp = Targer.Offset(, 2).Value
+  table_name_en = Targer.Offset(, 3).Value
   Set create_table_sheet = table_sheets.create_table_sheet(Worksheets(index), Targer.Row - 1, table_name_jp, table_name_en)
   
   'ハイパーリンク設定
@@ -54,7 +64,7 @@ Public Sub save_(ByVal line_sep As Integer)
   Dim data() As String, Target As Range
   
   For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).value Then Call Worksheets(Target.value).save_(data)
+    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).save_(data)
   Next
   
   Call text_io.plain_out(SAVE_DATA, data, line_sep)
@@ -66,7 +76,7 @@ Public Sub out_ddl(ByVal line_sep As Integer)
   Dim Target As Range
   
   For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).value Then Call Worksheets(Target.value).out_ddl(line_sep)
+    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).out_ddl(line_sep)
   Next
   
 End Sub
@@ -82,7 +92,7 @@ Public Sub out_view_md(ByVal line_sep As Integer)
   Call push_array(data, "----------")
   
   For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).value Then Call Worksheets(Target.value).out_view_md(data)
+    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).out_view_md(data)
   Next
   
   Call push_array(data, "")

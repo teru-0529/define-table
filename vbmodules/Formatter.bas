@@ -95,15 +95,15 @@ Sub notInput(ByRef area As Range)
 End Sub
 
 '// IMEモード
-Sub imeMode(ByRef area As Range, ByVal mode As Boolean)
+Sub IMEMode(ByRef area As Range, ByVal mode As Boolean)
   If area Is Nothing Then Exit Sub
   With area.Validation
     .Delete
     .Add Type:=xlValidateInputOnly
     If mode Then
-      .imeMode = xlIMEModeOn
+      .IMEMode = xlIMEModeOn
     Else
-      .imeMode = xlIMEModeOff
+      .IMEMode = xlIMEModeOff
     End If
   End With
 End Sub
@@ -115,7 +115,7 @@ Sub stringSpec(ByRef area As Range)
     .Interior.ColorIndex = xlNone
     .Validation.Delete
     .Validation.Add Type:=xlValidateInputOnly
-    .Validation.imeMode = xlIMEModeOff
+    .Validation.IMEMode = xlIMEModeOff
     .NumberFormatLocal = "@"
   End With
 End Sub
@@ -128,7 +128,7 @@ Sub lengthSpec(ByRef area As Range)
     .Validation.Delete
     .Validation.Add Type:=xlValidateWholeNumber, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="1", Formula2:="1000"
     .Validation.ErrorMessage = "1-1000の間で入力可能"
-    .Validation.imeMode = xlIMEModeOff
+    .Validation.IMEMode = xlIMEModeOff
     .NumberFormatLocal = "#,##0_ "
   End With
 End Sub
@@ -141,7 +141,7 @@ Sub numericSpec(ByRef area As Range)
     .Validation.Delete
     .Validation.Add Type:=xlValidateWholeNumber, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="-999999999999", Formula2:="999999999999"
     .Validation.ErrorMessage = "数値のみ入力可能"
-    .Validation.imeMode = xlIMEModeOff
+    .Validation.IMEMode = xlIMEModeOff
     .NumberFormatLocal = "#,##0_ "
   End With
 End Sub

@@ -7,7 +7,7 @@ Declare PtrSafe Function GetPrivateProfileString Lib _
     ByVal section As String, _
     ByVal key As Any, _
     ByVal default As String, _
-    ByVal value As String, _
+    ByVal Value As String, _
     ByVal Size As Long, _
     ByVal ini_path As String _
 ) As Long
@@ -50,12 +50,12 @@ End Function
 
 '// 項目定義の更新日時を記録
 Public Sub setModifyDatetime()
-  ThisWorkbook.Names.Add name:="CURRENT_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
+  ThisWorkbook.Names.Add Name:="CURRENT_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
 End Sub
 
 '// 項目定義の更新日時が最新かどうかをチェック
 Public Function isUpdateModifyDatetime() As Boolean
-  ThisWorkbook.Names.Add name:="MODIFY_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
+  ThisWorkbook.Names.Add Name:="MODIFY_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
   isUpdateModifyDatetime = ThisWorkbook.Names("CURRENT_DATETIME") <> ThisWorkbook.Names("MODIFY_DATETIME")
 End Function
 
@@ -74,11 +74,11 @@ Public Sub init(ByVal iniFile As String)
   Debug.Print "|----|---- configuration setup start ----|----|"
 
   SCHEMA_JP = getIniValue("schema", "nameJp", iniPath)
-  Range("SCHEMA_JP").value = SCHEMA_JP
+  Range("SCHEMA_JP").Value = SCHEMA_JP
   Debug.Print "[config] SCHEMA_JP: " & SCHEMA_JP
   
   SCHEMA_EN = getIniValue("schema", "nameEn", iniPath)
-  Range("SCHEMA_EN").value = SCHEMA_EN
+  Range("SCHEMA_EN").Value = SCHEMA_EN
   Debug.Print "[config] SCHEMA_EN: " & SCHEMA_EN
 
   SAVE_DATA = absPath(getIniValue("Path", "saveData", iniPath))

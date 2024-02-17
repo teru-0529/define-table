@@ -19,7 +19,7 @@ Sub SaveModule()
   dir_path = makeCleanDir(DIR_NAME, FSO)
 
   For Each xlMod In ThisWorkbook.VBProject.VBComponents
-    xlMod.Export FSO.BuildPath(dir_path, xlMod.name & getModuleExt(xlMod.Type))
+    xlMod.Export FSO.BuildPath(dir_path, xlMod.Name & getModuleExt(xlMod.Type))
   Next
 
   Set FSO = Nothing
@@ -41,11 +41,11 @@ Private Function getModuleExt(ByVal module_type As Integer) As String
 End Function
 
 '// Bookと同じ階層にディレクトリを作成し絶対パスを返す（既に存在する場合は中身を削除する）
-Private Function makeCleanDir(ByVal name As String, fso_ As Object) As String
+Private Function makeCleanDir(ByVal Name As String, fso_ As Object) As String
 
   Dim dir_path As String ' ディレクトリパス
 
-  dir_path = fso_.BuildPath(ThisWorkbook.path, name)
+  dir_path = fso_.BuildPath(ThisWorkbook.path, Name)
 
   '// ディレクトリが存在する場合は削除してから作成する
   If Dir(dir_path, vbDirectory) <> "" Then
