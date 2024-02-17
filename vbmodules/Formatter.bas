@@ -42,6 +42,13 @@ Sub listSelect(ByRef area As Range, ByVal listName As String)
   Call condFunction(area, "=AND(RC<>"""",ISNA(MATCH(RC," & listName & ",0)))")
 End Sub
 
+'// 条件付き書式（リセット）
+Sub condClear(ByRef area As Range)
+  If area Is Nothing Then Exit Sub
+
+  area.FormatConditions.Delete
+End Sub
+
 '// 条件付き書式
 Sub condFunction(ByRef area As Range, ByVal formula As String)
   Dim condFormat As FormatCondition

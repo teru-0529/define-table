@@ -62,6 +62,13 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       Util.unionRange(Cells(i, COL_NOTNULL), Cells(i, COL_DEFAULT)).ClearContents
       '// 強制NOTNULLの設定
       If Cells(i, COL_FORCE_NOTNULL).value = True Then Cells(i, COL_NOTNULL).value = 1
+      
+      '// 条件付き書式の設定（※入力後すぐのエラーを抑止するため初期化後に書式登録）
+      If elm.value = "" Then
+        Call Formatter.condClear(Cells(i, COL_NOTNULL))
+      Else
+        Call Formatter.condFunction(Cells(i, COL_NOTNULL), "=RC22")
+      End If
     Next
   End If
   
