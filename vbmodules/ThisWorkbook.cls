@@ -42,9 +42,8 @@ Private Sub Workbook_Open()
   Call elements.load(outerExec("loadElements -I " & ELEMENTS_DATA))
   Call Config.setModifyDatetime
 
-  '// FIXME:★★★★★
-  Call index_sht.load(outerExec("load -D " & ThisWorkbook.path & "\v3.yaml"))
-  'Call read_write_files.load_(adLF)
+  '// 読込み
+  Call index_sht.load(outerExec("load -D " & SAVE_DATA))
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   Application.EnableEvents = True
   Application.Calculate
@@ -77,9 +76,12 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '業務ロジック
 
-  '// FIXME:★★★★★
   If index_sht.Range("SAVE_OK").Value Then
-    Call index_sht.save_(adLF)
+    '// Yamlファイルの出力
+    Call outerExec("save -D " & SAVE_DATA & " -E " & ThisWorkbook.FullName)
+    
+    '// FIXME:★★★★★
+    'Call index_sht.save_(adLF)
     Call index_sht.out_ddl(adLF)
     Call index_sht.out_view_md(adLF)
     message = "Git管理用ファイル、DDLを作成しました。"

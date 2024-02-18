@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/teru-0529/define-table/v3/model/tables"
 )
 
 var excelPath string
@@ -19,13 +20,13 @@ var saveCmd = &cobra.Command{
 	Long:  "Get savedata from excel sheet and write yaml.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		// monad, err := tables.FromExcel(excelPath)
-		// if err != nil {
-		// 	return err
-		// }
+		monad, err := tables.FromExcel(excelPath)
+		if err != nil {
+			return err
+		}
 
-		// monad.Version = version
-		// monad.Write(savedataPath)
+		monad.Version = version
+		monad.Write(savedataPath)
 
 		fmt.Printf("input excel file: [%s]\n", filepath.ToSlash(filepath.Clean(excelPath)))
 		fmt.Printf("output yaml file: [%s]\n", filepath.ToSlash(filepath.Clean(savedataPath)))
@@ -35,5 +36,5 @@ var saveCmd = &cobra.Command{
 }
 
 func init() {
-	saveCmd.Flags().StringVarP(&excelPath, "excel-data", "E", "./define-table.xlsm", "ui-excel path")
+	saveCmd.Flags().StringVarP(&excelPath, "excel-data", "E", "./テーブル定義.xlsm", "ui-excel path")
 }
