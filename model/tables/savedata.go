@@ -13,7 +13,13 @@ type SaveData struct {
 	DataType string    `yaml:"data_type"`
 	Version  string    `yaml:"version"`
 	CreateAt time.Time `yaml:"create_at"`
+	Schema   Schema    `yaml:"schema"`
 	Tables   []Table   `yaml:"tables"`
+}
+
+type Schema struct {
+	NameJp string `yaml:"name_jp"`
+	NameEn string `yaml:"name_en"`
 }
 
 type Table struct {

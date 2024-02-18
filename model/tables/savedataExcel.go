@@ -8,6 +8,7 @@ import (
 )
 
 const SHT_INDEX = "一覧"
+const SHT_TEMPLATE = "テンプレート"
 
 func FromExcel(fileName string) (*SaveData, error) {
 
@@ -19,6 +20,9 @@ func FromExcel(fileName string) (*SaveData, error) {
 		return nil, err
 	}
 	defer f.Close()
+
+	savedata.Schema.NameJp = getValue(f, SHT_TEMPLATE, 1, 2)
+	savedata.Schema.NameEn = getValue(f, SHT_TEMPLATE, 1, 3)
 
 	for i := 2; i < 102; i++ {
 		tableJp := getValue(f, SHT_INDEX, i, 3)
