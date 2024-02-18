@@ -12,8 +12,6 @@ import (
 	"golang.org/x/text/transform"
 )
 
-var elementsFile string
-
 // loadElementsCmd represents the loadElements command
 var loadElementsCmd = &cobra.Command{
 	Use:   "loadElements",
@@ -22,7 +20,7 @@ var loadElementsCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		// INFO: save-dataの読込み
-		monad, err := elements.New(elementsFile)
+		monad, err := elements.New(elementsPath)
 		if err != nil {
 			return err
 		}
@@ -39,7 +37,4 @@ var loadElementsCmd = &cobra.Command{
 }
 
 func init() {
-	loadElementsCmd.Flags().StringVarP(&elementsFile, "elements-file", "I", "", "input file name.")
-
-	loadElementsCmd.MarkFlagRequired("elements-file")
 }
