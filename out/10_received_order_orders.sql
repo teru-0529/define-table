@@ -4,10 +4,10 @@
 -- Create Table
 DROP TABLE IF EXISTS received_order.orders CASCADE;
 CREATE TABLE received_order.orders (
-  received_order_no varchar(10) NOT NULL check (LENGTH(received_order_no) >= 10),
+  received_order_no varchar(10) NOT NULL check (LENGTH(received_order_no) = 10),
   order_date date NOT NULL,
   person_in_charge varchar(30),
-  customer_id varchar(3) NOT NULL check (LENGTH(customer_id) >= 3),
+  customer_id varchar(3) NOT NULL check (LENGTH(customer_id) = 3),
   comment text check (LENGTH(comment) >= 10),
   created_at timestamp NOT NULL DEFAULT current_timestamp,
   updated_at timestamp NOT NULL DEFAULT current_timestamp,

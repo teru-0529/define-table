@@ -4,7 +4,7 @@
 -- Create Table
 DROP TABLE IF EXISTS received_order.customers CASCADE;
 CREATE TABLE received_order.customers (
-  customer_id varchar(3) NOT NULL check (LENGTH(customer_id) >= 3),
+  customer_id varchar(3) NOT NULL check (LENGTH(customer_id) = 3),
   customer_name varchar(100) NOT NULL,
   person_in_charge varchar(30),
   customer_type customer_type NOT NULL,

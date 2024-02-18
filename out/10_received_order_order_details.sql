@@ -4,7 +4,7 @@
 -- Create Table
 DROP TABLE IF EXISTS received_order.order_details CASCADE;
 CREATE TABLE received_order.order_details (
-  received_order_no varchar(10) NOT NULL check (LENGTH(received_order_no) >= 10),
+  received_order_no varchar(10) NOT NULL check (LENGTH(received_order_no) = 10),
   product_no varchar(10) NOT NULL check (LENGTH(product_no) >= 9),
   quantity integer check (0 <= quantity AND quantity <= 99999),
   price integer check (price >= 0),
