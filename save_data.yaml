@@ -1,10 +1,13 @@
 data_type: define_tables
-version: convert
-create_at: 2024-02-18T10:02:10+09:00
+version: dev
+create_at: 2024-02-18T12:37:20+09:00
+schema:
+  name_jp: 受注
+  name_en: received_order
 tables:
   - name_jp: 得意先
     name_en: customers
-    is_master: false
+    is_master: true
     fields:
       - name: 得意先ID
         nullable: false

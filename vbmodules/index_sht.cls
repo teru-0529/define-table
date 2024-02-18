@@ -37,7 +37,8 @@ Public Sub load(ByVal data As String)
   Dim table As Worksheet
 
   '// 初期化
-  Call init
+  Range("DATA_AREA").ClearContents
+  Tables.Delete
 
   '// 行ごとのデータに分割
   records = Split(data, vbLf)
@@ -56,12 +57,6 @@ Public Sub load(ByVal data As String)
   Next i
 End Sub
 
-'// 初期化処理（☆☆☆）
-Public Sub init()
-  Range("DATA_AREA").ClearContents
-  Tables.Delete
-End Sub
-
 '// テーブル作成
 Public Function createTable(ByRef tableName As Range) As Worksheet
   
@@ -76,6 +71,12 @@ End Function
 '// テーブル削除
 Public Sub dropTable(ByVal tableNo As Long)
   Util.unionRange(Cells(tableNo + 1, 3), Cells(tableNo + 1, 6)).ClearContents
+End Sub
+
+
+'// 入力バリデーション
+Public Sub validate()
+  If Range("ERRORS").Value > 0 Then Call Process.invalid
 End Sub
 
 

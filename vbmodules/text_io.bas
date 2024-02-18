@@ -3,44 +3,6 @@ Option Explicit
 
 Const char_set = "UTF-8"
 
-  '// FIXME:★★★★★
-
-'プレーンテキスト入力
-Public Function plain_in(ByVal path As String, ByVal line_sep As Integer) As String()
-  Dim adoSt As Object, data() As String
-  Set adoSt = CreateObject("ADODB.Stream")
-  
-  If CreateObject("Scripting.FileSystemObject").fileexists(path) = False Then
-    '存在しない場合はダミーデータを返す
-    Call Util.push_array(data, "NO_DATA")
-    plain_in = data()
-    Exit Function
-  End If
-
-  With adoSt
-    .Type = adTypeText
-    .Charset = char_set
-    .LineSeparator = line_sep
-    .Open
-    .LoadFromFile (path)
-    
-    Do While Not (.EOS)
-      Call Util.push_array(data, .ReadText(adReadLine))
-    Loop
-    
-    .Close
-  End With
-  
-  Set adoSt = Nothing
-  plain_in = data()
-  
-  Debug.Print "<<INPUT>>"
-  Debug.Print "PATH:" & path
-  Debug.Print "LINE_SEP:" & line_sep
-  Call Util.Print_Array(data)
-
-End Function
-
 
   '// FIXME:★★★★★
 'プレーンテキスト出力

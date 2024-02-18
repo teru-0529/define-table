@@ -49,11 +49,12 @@ Private Sub Workbook_Open()
   Application.Calculate
   Application.ScreenUpdating = True
   Application.StatusBar = False
-
+  
   Debug.Print "[operationMode] " & Config.OPERATION_MODE
   Debug.Print Config.getFullVersion
   Call showTime(Timer - startTime)
   MsgBox Config.getFullVersion()
+
 End Sub
 
 ' 保存時
@@ -76,17 +77,17 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '業務ロジック
 
-  If index_sht.Range("SAVE_OK").Value Then
+  If Process.isValid() Then
     '// Yamlファイルの出力
     Call outerExec("save -D " & SAVE_DATA & " -E " & ThisWorkbook.FullName)
     
     '// FIXME:★★★★★
     Call index_sht.out_ddl(adLF)
     Call index_sht.out_view_md(adLF)
-    message = "Git管理用ファイル、DDLを作成しました。"
+    message = "管理用yamlファイル、DDLを作成しました。"
 
   Else
-    message = "何らかのエラーがあるため、出力ファイルの保存ができませんでした。"
+    message = "登録内容にエラーがあるため、出力ファイルの保存ができませんでした。"
 
   End If
 

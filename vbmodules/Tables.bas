@@ -60,6 +60,8 @@ Public Sub load(sht As Worksheet, record As String)
     sht.Range("FIELD_NAME").Resize(1).Offset(i).Value = field(0)
     sht.Range("FIELD_NAME").Resize(1).Offset(i, 3).Value = field(1)
     sht.Range("FIELD_NAME").Resize(1).Offset(i, 4).Value = field(2)
+      '// ğŒ•t‚«‘®‚Ìİ’è
+    Call Formatter.condFunction(sht.Range("FIELD_NAME").Resize(1).Offset(i, 3), "=RC22")
   Next i
   
   '// pk
