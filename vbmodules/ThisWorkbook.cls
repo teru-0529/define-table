@@ -81,7 +81,6 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
     Call outerExec("save -D " & SAVE_DATA & " -E " & ThisWorkbook.FullName)
     
     '// FIXME:★★★★★
-    'Call index_sht.save_(adLF)
     Call index_sht.out_ddl(adLF)
     Call index_sht.out_view_md(adLF)
     message = "Git管理用ファイル、DDLを作成しました。"

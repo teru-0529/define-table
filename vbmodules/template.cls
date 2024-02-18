@@ -84,68 +84,6 @@ End Sub
 
 
   '// FIXME:★★★★★
-'----+----+----+----+----+----+----+----+----+----+
-'出力
-Public Sub save_(data() As String)
-  Dim Target As Range, i As Long
-
-  Call push_array(data, "- ddl:")
-  
-  '基本情報
-  Call push_array(data, indent(2) & to_yaml("table_name_jp", Range("TABLE_JP").Value))
-  Call push_array(data, indent(2) & to_yaml("table_name_en", Range("TABLE_EN").Value))
-  Call push_array(data, "")
-  
-  'テーブル項目
-  Call push_array(data, indent(2) & "fielsd:")
-  For Each Target In Range("FIELD_NAME")
-    If Target.Value <> "" Then
-      i = Target.Row
-      Call push_array(data, indent(3) & to_yaml("- name", Cells(i, 項目名JP).Value))
-      Call push_array(data, indent(4) & to_yaml("not_null", Cells(i, NOTNULL).Value))
-      Call push_array(data, indent(4) & to_yaml("default", Cells(i, デフォルト値).Value))
-      Call push_array(data, "")
-    End If
-  Next
-  
-  'PK制約
-  Call push_array(data, indent(2) & "primary_key:")
-  For Each Target In Range("PK_AREA")
-    If Target.Value <> "" Then
-      Call push_array(data, indent(3) & "- " & Target.Value)
-    End If
-  Next
-  Call push_array(data, "")
-  
-  'ユニーク制約
-  Call push_array(data, indent(2) & "unique:")
-  Call push_array(data, indent(3) & to_yaml("exists", Range("UNIQUE_EXIST").Value))
-  If Range("UNIQUE_EXIST").Value Then
-    Call push_array(data, indent(3) & "constraints:")
-    For Each Target In Range("UNIQUE_LIST")
-      If Target.Value <> "" Then
-        Call push_array(data, indent(4) & "- constraint:")
-        If Target.Offset(, -6).Value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -6).Value)
-        If Target.Offset(, -5).Value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -5).Value)
-        If Target.Offset(, -4).Value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -4).Value)
-        If Target.Offset(, -3).Value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -3).Value)
-        If Target.Offset(, -2).Value <> "" Then Call push_array(data, indent(5) & "- " & Target.Offset(, -2).Value)
-      End If
-    Next
-  End If
-  Call push_array(data, "")
-  
-  'チェック制約
-  Call push_array(data, indent(2) & "check:")
-  Call push_array(data, "")
-  
-  '外部キー制約
-  Call push_array(data, indent(2) & "foreign_key:")
-  Call push_array(data, "")
-  
-End Sub
-
-  '// FIXME:★★★★★
 Public Sub out_view_md(data() As String)
   Dim Target As Range, i As Long, is_not_null As Boolean, constraint As String
 
