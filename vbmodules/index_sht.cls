@@ -82,18 +82,6 @@ End Sub
 
 
   '// FIXME:ššššš
-'save_data.yaml.o—Í
-Public Sub save_(ByVal line_sep As Integer)
-  Dim data() As String, Target As Range
-  
-  For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).save_(data)
-  Next
-  
-  Call text_io.plain_out(SAVE_DATA, data, line_sep)
-End Sub
-
-  '// FIXME:ššššš
 'ddl.o—Í
 Public Sub out_ddl(ByVal line_sep As Integer)
   Dim Target As Range
