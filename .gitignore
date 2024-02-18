@@ -23,8 +23,6 @@ go.work
 dist/
 
 /dist
-/view
-/out
 
 *.cls
 !vbmodules/elements.cls

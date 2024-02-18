@@ -65,6 +65,12 @@ github.com/subosito/gotenv v1.6.0 h1:9NlTDc1FTs4qu0DDq7AEtTPNw6SVm7uBMsUCUjABIf8
 github.com/subosito/gotenv v1.6.0/go.mod h1:Dk4QP5c2W3ibzajGcXpNraDfq2IrhjMIvMSWPKKo0FU=
 github.com/teru-0529/define-monad/v3 v3.0.10 h1:Cjtv2ygDhd+QVc+Hl8SSMfqp6zczU3A2ORVNudfH16E=
 github.com/teru-0529/define-monad/v3 v3.0.10/go.mod h1:WKHU5nAPlaYjnPOiAL0uOE+Z6e82HfN9rDoaFowDYJc=
+github.com/teru-0529/define-monad/v3 v3.0.13 h1:7A7Yw4Mk2oldtz/92DBu8NrmQFMweA2QnoAFCjdqCUs=
+github.com/teru-0529/define-monad/v3 v3.0.13/go.mod h1:SPsE/DiNXBSZZcwHc+RRf+hPFoEQoHGRRhd+bIWsMtk=
+github.com/teru-0529/define-monad/v3 v3.0.14 h1:PTCfjubeqeYk1qSmqXHkOVRK3v4rXghtfmTfvXR3Q74=
+github.com/teru-0529/define-monad/v3 v3.0.14/go.mod h1:SPsE/DiNXBSZZcwHc+RRf+hPFoEQoHGRRhd+bIWsMtk=
+github.com/teru-0529/define-monad/v3 v3.0.15 h1:MZasbii/URoPWgBpHpTuTkHrojN/k7TVG3mRTwdq0to=
+github.com/teru-0529/define-monad/v3 v3.0.15/go.mod h1:SPsE/DiNXBSZZcwHc+RRf+hPFoEQoHGRRhd+bIWsMtk=
 github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca/go.mod h1:ybY/Jr0T0GTCnYjKqmdwxyxn2BQf2RcQIIvex5QldPI=
 github.com/xuri/efp v0.0.0-20231025114914-d1ff6096ae53 h1:Chd9DkqERQQuHpXjR/HSV1jLZA6uaoiwwH3vSuF3IW0=
 github.com/xuri/efp v0.0.0-20231025114914-d1ff6096ae53/go.mod h1:ybY/Jr0T0GTCnYjKqmdwxyxn2BQf2RcQIIvex5QldPI=
