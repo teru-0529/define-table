@@ -7,7 +7,7 @@ Declare PtrSafe Function GetPrivateProfileString Lib _
     ByVal section As String, _
     ByVal key As Any, _
     ByVal default As String, _
-    ByVal value As String, _
+    ByVal Value As String, _
     ByVal Size As Long, _
     ByVal ini_path As String _
 ) As Long
@@ -24,7 +24,8 @@ Public DDL_VIEW As String
 Public DDL_DIR As String
 
 '// 操作モード
-Dim OPERATION_MODE As String
+Dim FULL_VERSION As String
+Public OPERATION_MODE As String
 Dim SAVE_HISTORY_FUNC As Boolean
 
 '// スキーマ名取得
@@ -39,7 +40,7 @@ End Function
 
 '// バージョン情報取得（Full）
 Public Function getFullVersion() As String
-  getFullVersion = Process.outerExec("version -F")
+  getFullVersion = FULL_VERSION
 End Function
 
 '// バージョン情報取得
@@ -49,12 +50,12 @@ End Function
 
 '// 項目定義の更新日時を記録
 Public Sub setModifyDatetime()
-  ThisWorkbook.Names.Add name:="CURRENT_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
+  ThisWorkbook.Names.Add Name:="CURRENT_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
 End Sub
 
 '// 項目定義の更新日時が最新かどうかをチェック
 Public Function isUpdateModifyDatetime() As Boolean
-  ThisWorkbook.Names.Add name:="MODIFY_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
+  ThisWorkbook.Names.Add Name:="MODIFY_DATETIME", RefersToR1C1:=getModifyTime(ELEMENTS_DATA)
   isUpdateModifyDatetime = ThisWorkbook.Names("CURRENT_DATETIME") <> ThisWorkbook.Names("MODIFY_DATETIME")
 End Function
 
@@ -73,9 +74,11 @@ Public Sub init(ByVal iniFile As String)
   Debug.Print "|----|---- configuration setup start ----|----|"
 
   SCHEMA_JP = getIniValue("schema", "nameJp", iniPath)
+  Range("SCHEMA_JP").Value = SCHEMA_JP
   Debug.Print "[config] SCHEMA_JP: " & SCHEMA_JP
   
   SCHEMA_EN = getIniValue("schema", "nameEn", iniPath)
+  Range("SCHEMA_EN").Value = SCHEMA_EN
   Debug.Print "[config] SCHEMA_EN: " & SCHEMA_EN
 
   SAVE_DATA = absPath(getIniValue("Path", "saveData", iniPath))
@@ -92,9 +95,12 @@ Public Sub init(ByVal iniFile As String)
 
   OPERATION_MODE = getIniValue("Operation", "mode", iniPath)
   Debug.Print "[config] OPERATION_MODE: " & OPERATION_MODE
-  
+
   SAVE_HISTORY_FUNC = getIniValue("Operation", "saveHistoryFunc", iniPath)
   Debug.Print "[config] SAVE_HISTORY_FUNC: " & SAVE_HISTORY_FUNC
+
+  FULL_VERSION = Process.outerExec("version -F")
+  Debug.Print "[config] FULL_VERSION: " & FULL_VERSION
   
   Set FSO = Nothing
   Call Util.showTime(Timer - startTime)

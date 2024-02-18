@@ -42,6 +42,8 @@ func init() {
 
 	// サブコマンドの追加
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(saveCmd)
+	rootCmd.AddCommand(loadCmd)
 	rootCmd.AddCommand(loadElementsCmd)
 	rootCmd.AddCommand(convertCmd)
 

@@ -1,16 +1,25 @@
 package tables
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/teru-0529/define-monad/v3/store"
+	"gopkg.in/yaml.v3"
 )
 
 type SaveData struct {
 	DataType string    `yaml:"data_type"`
 	Version  string    `yaml:"version"`
 	CreateAt time.Time `yaml:"create_at"`
+	Schema   Schema    `yaml:"schema"`
 	Tables   []Table   `yaml:"tables"`
+}
+
+type Schema struct {
+	NameJp string `yaml:"name_jp"`
+	NameEn string `yaml:"name_en"`
 }
 
 type Table struct {
@@ -50,6 +59,23 @@ type ForeignKey struct {
 type ForeignField struct {
 	ThisField string `yaml:"this"`
 	RefField  string `yaml:"ref"`
+}
+
+func New(path string) (*SaveData, error) {
+	// INFO: read
+	file, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read file: %s", err.Error())
+	}
+
+	// INFO: unmarchal
+	var ddls SaveData
+	err = yaml.Unmarshal([]byte(file), &ddls)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ddls, nil
 }
 
 // yamlファイルの書き込み

@@ -1,6 +1,7 @@
 Attribute VB_Name = "Util"
 Option Explicit
 
+  '// FIXME:★★★★★
 Const NULL_VALUE = "null"
 
 '// タイマーの表示
@@ -45,19 +46,20 @@ End Function
 
 
 'unionラッパー
-Public Function union_range(ByVal rng1 As Range, ByVal rng2 As Range) As Range
+Public Function unionRange(ByVal rng1 As Range, ByVal rng2 As Range) As Range
   If rng1 Is Nothing And rng2 Is Nothing Then
-    Set union_range = Nothing
+    Set unionRange = Nothing
   ElseIf rng1 Is Nothing Then
-    Set union_range = rng2
+    Set unionRange = rng2
   ElseIf rng2 Is Nothing Then
-    Set union_range = rng1
+    Set unionRange = rng1
   Else
-    Set union_range = Union(rng1, rng2)
+    Set unionRange = Union(rng1, rng2)
   End If
 End Function
 
 
+  '// FIXME:★★★★★
 Public Sub Print_Array(ByRef arr As Variant)
   Dim i As Long, d As String
     
@@ -70,7 +72,7 @@ Public Sub Print_Array(ByRef arr As Variant)
 End Sub
 
 'エラーがある場合にシート色を変更する
-Public Sub validate_sheet_color(ByVal sht As Worksheet, ByVal is_error As Boolean)
+Public Sub invalidTableSheet(ByVal sht As Worksheet, ByVal is_error As Boolean)
   If is_error Then
     sht.Tab.Color = RGB(255, 204, 255) 'PINK
   Else
@@ -78,12 +80,14 @@ Public Sub validate_sheet_color(ByVal sht As Worksheet, ByVal is_error As Boolea
   End If
 End Sub
 
+  '// FIXME:★★★★★
 ' yaml 用のkey-value文字列を作成する（valueが空の場合はnull値に変換）
-Public Function to_yaml(ByVal key As String, ByVal value As String) As String
+Public Function to_yaml(ByVal key As String, ByVal Value As String) As String
   to_yaml = key & ": "
-  If value = "" Then to_yaml = to_yaml & NULL_VALUE Else: to_yaml = to_yaml & value
+  If Value = "" Then to_yaml = to_yaml & NULL_VALUE Else: to_yaml = to_yaml & Value
 End Function
 
+  '// FIXME:★★★★★
 ' yaml 用のkey-value文字列からvalueを抽出する（valueがnull値の場合は空文字に変換）
 Public Function from_yaml(ByVal yaml As String) As String
   Dim val As String
@@ -98,6 +102,7 @@ Public Function from_yaml(ByVal yaml As String) As String
   If val = NULL_VALUE Then from_yaml = "" Else from_yaml = val
 End Function
 
+  '// FIXME:★★★★★
 Public Function indent(ByVal num As Integer) As String
   indent = String(num * YAML_INDENT_SPACE, " ")
 End Function

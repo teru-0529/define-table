@@ -48,19 +48,17 @@ End Sub
 
 '// フォーマット
 Private Sub areaFormat()
-  Application.EnableEvents = False
 
   '// 枠線
-  Call Formatter.borderAndFontsize(Range("ELEM_FULL"))
+  Call Formatter.borderAndFontsize(Range("DATA_AREA"))
 
   '// 背景色
-  Call Formatter.notInput(Range("ELEM_FULL"))
+  Call Formatter.notInput(Range("DATA_AREA"))
 
   '// 表示形式
-  Call Formatter.formatLocal(Range("ELEM_H"), """○"";;;")
+  Call Formatter.formatLocal(Range("DATA_AREA_H"), """○"";;;")
 
   '// 表示形式
-  Call Formatter.horizontalPosition(Range("ELEM_H"), xlCenter)
+  Call Formatter.horizontalPosition(Range("DATA_AREA_H"), xlCenter)
 
-  Application.EnableEvents = True
 End Sub

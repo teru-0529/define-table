@@ -36,19 +36,25 @@ Private Sub Workbook_Open()
   Call Config.init("vba.ini")
 
   Application.ScreenUpdating = False
+  Application.EnableEvents = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '// 項目定義の取得
   Call elements.load(outerExec("loadElements -I " & ELEMENTS_DATA))
   Call Config.setModifyDatetime
 
-  '// FIXME:★★★★★
-  Call read_write_files.load_(adLF)
+  '// 読込み
+  Call index_sht.load(outerExec("load -D " & SAVE_DATA))
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  Application.EnableEvents = True
+  Application.Calculate
   Application.ScreenUpdating = True
   Application.StatusBar = False
-
+  
+  Debug.Print "[operationMode] " & Config.OPERATION_MODE
+  Debug.Print Config.getFullVersion
   Call showTime(Timer - startTime)
   MsgBox Config.getFullVersion()
+
 End Sub
 
 ' 保存時
@@ -62,9 +68,8 @@ End Sub
 
 ' 保存時
 Private Sub Workbook_AfterSave(ByVal Success As Boolean)
-  Dim start_time As Double
-  start_time = Timer
-
+  Dim message As String
+  
   '// パス情報の取得
   Call Config.init("vba.ini")
 
@@ -72,16 +77,17 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   '業務ロジック
 
-  '// FIXME:★★★★★
-  If index_sht.Range("SAVE_OK").value Then
-    Call index_sht.save_(adLF)
+  If Process.isValid() Then
+    '// Yamlファイルの出力
+    Call outerExec("save -D " & SAVE_DATA & " -E " & ThisWorkbook.FullName)
+    
+    '// FIXME:★★★★★
     Call index_sht.out_ddl(adLF)
     Call index_sht.out_view_md(adLF)
-    Call showTime(Timer - start_time)
-    MsgBox "Git管理用ファイル、DDLを作成しました。"
+    message = "管理用yamlファイル、DDLを作成しました。"
 
   Else
-    MsgBox "何らかのエラーがあるため、出力ファイルの保存ができませんでした。"
+    message = "登録内容にエラーがあるため、出力ファイルの保存ができませんでした。"
 
   End If
 
@@ -89,7 +95,11 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Application.ScreenUpdating = True
   Application.StatusBar = False
 
+  Debug.Print "[operationMode] " & Config.OPERATION_MODE
   '// 開発モードの場合、モジュールを出力
   If Config.isDevelop() Then Call ExportModule.SaveModule
   Debug.Print Config.getFullVersion
+  Call showTime(Timer - startTime)
+  MsgBox message
+  
 End Sub

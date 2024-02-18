@@ -1,108 +1,87 @@
-- ddl:
-    table_name_jp: 得意先
-    table_name_en: customers
-
-    fielsd:
+data_type: define_tables
+version: dev
+create_at: 2024-02-18T12:37:20+09:00
+schema:
+  name_jp: 受注
+  name_en: received_order
+tables:
+  - name_jp: 得意先
+    name_en: customers
+    is_master: true
+    fields:
       - name: 得意先ID
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 得意先
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 担当者名
-        not_null: null
+        nullable: true
         default: null
-
       - name: 取引先区分
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 登録日
-        not_null: 1
+        nullable: false
         default: current_timestamp
-
-    primary_key:
-      - 得意先ID
-
-    unique:
-      exists: True
-      constraints:
-        - constraint:
-          - 得意先
-          - 担当者名
-        - constraint:
-          - 登録日
-
-    check:
-
-    foreign_key:
-
-- ddl:
-    table_name_jp: 受注
-    table_name_en: orders
-
-    fielsd:
+    constraint:
+      primary_key:
+        - 得意先ID
+      uniques:
+        - name: customers_unique_1
+          fields:
+            - 得意先
+            - 担当者名
+        - name: customers_unique_2
+          fields:
+            - 登録日
+      foreign_keys: []
+    indexes: []
+  - name_jp: 受注
+    name_en: orders
+    is_master: false
+    fields:
       - name: 受注No
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 受注日
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 担当者名
-        not_null: null
+        nullable: true
         default: null
-
       - name: 得意先ID
-        not_null: 1
+        nullable: false
         default: null
-
       - name: コメント
-        not_null: null
+        nullable: true
         default: null
-
-    primary_key:
-      - 受注No
-
-    unique:
-      exists: False
-
-    check:
-
-    foreign_key:
-
-- ddl:
-    table_name_jp: 受注明細
-    table_name_en: order_details
-
-    fielsd:
+    constraint:
+      primary_key:
+        - 受注No
+      uniques: []
+      foreign_keys: []
+    indexes: []
+  - name_jp: 受注明細
+    name_en: order_details
+    is_master: false
+    fields:
       - name: 受注No
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 商品No
-        not_null: 1
+        nullable: false
         default: null
-
       - name: 数量
-        not_null: null
+        nullable: true
         default: null
-
       - name: 定価
-        not_null: null
+        nullable: true
         default: null
-
-    primary_key:
-      - 受注No
-      - 商品No
-
-    unique:
-      exists: False
-
-    check:
-
-    foreign_key:
-
+    constraint:
+      primary_key:
+        - 受注No
+        - 商品No
+      uniques: []
+      foreign_keys: []
+    indexes: []

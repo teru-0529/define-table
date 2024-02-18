@@ -1,7 +1,6 @@
 Attribute VB_Name = "Formatter"
 Option Explicit
 
-
 Public Const IME_MODE_ON = True
 Public Const IME_MODE_OFF = False
 
@@ -43,6 +42,13 @@ Sub listSelect(ByRef area As Range, ByVal listName As String)
   Call condFunction(area, "=AND(RC<>"""",ISNA(MATCH(RC," & listName & ",0)))")
 End Sub
 
+'// 条件付き書式（リセット）
+Sub condClear(ByRef area As Range)
+  If area Is Nothing Then Exit Sub
+
+  area.FormatConditions.Delete
+End Sub
+
 '// 条件付き書式
 Sub condFunction(ByRef area As Range, ByVal formula As String)
   Dim condFormat As FormatCondition
@@ -70,6 +76,13 @@ Sub setFunction(ByRef area As Range, ByVal formula As String)
   Call notInput(area)
 End Sub
 
+'// ハイパーリンク設定
+Sub addLink(ByRef sht As Worksheet, ByRef area As Range, address As String, display As String)
+  If area Is Nothing Then Exit Sub
+  sht.Hyperlinks.Add Anchor:=area, address:="", SubAddress:=address, TextToDisplay:=display
+  area.Font.Size = 9
+End Sub
+
 '// 表示形式
 Sub formatLocal(ByRef area As Range, ByVal formula As String)
   If area Is Nothing Then Exit Sub
@@ -89,15 +102,15 @@ Sub notInput(ByRef area As Range)
 End Sub
 
 '// IMEモード
-Sub imeMode(ByRef area As Range, ByVal mode As Boolean)
+Sub IMEMode(ByRef area As Range, ByVal mode As Boolean)
   If area Is Nothing Then Exit Sub
   With area.Validation
     .Delete
     .Add Type:=xlValidateInputOnly
     If mode Then
-      .imeMode = xlIMEModeOn
+      .IMEMode = xlIMEModeOn
     Else
-      .imeMode = xlIMEModeOff
+      .IMEMode = xlIMEModeOff
     End If
   End With
 End Sub
@@ -109,7 +122,7 @@ Sub stringSpec(ByRef area As Range)
     .Interior.ColorIndex = xlNone
     .Validation.Delete
     .Validation.Add Type:=xlValidateInputOnly
-    .Validation.imeMode = xlIMEModeOff
+    .Validation.IMEMode = xlIMEModeOff
     .NumberFormatLocal = "@"
   End With
 End Sub
@@ -122,7 +135,7 @@ Sub lengthSpec(ByRef area As Range)
     .Validation.Delete
     .Validation.Add Type:=xlValidateWholeNumber, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="1", Formula2:="1000"
     .Validation.ErrorMessage = "1-1000の間で入力可能"
-    .Validation.imeMode = xlIMEModeOff
+    .Validation.IMEMode = xlIMEModeOff
     .NumberFormatLocal = "#,##0_ "
   End With
 End Sub
@@ -135,7 +148,7 @@ Sub numericSpec(ByRef area As Range)
     .Validation.Delete
     .Validation.Add Type:=xlValidateWholeNumber, AlertStyle:=xlValidAlertStop, Operator:=xlBetween, Formula1:="-999999999999", Formula2:="999999999999"
     .Validation.ErrorMessage = "数値のみ入力可能"
-    .Validation.imeMode = xlIMEModeOff
+    .Validation.IMEMode = xlIMEModeOff
     .NumberFormatLocal = "#,##0_ "
   End With
 End Sub

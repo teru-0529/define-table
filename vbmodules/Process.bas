@@ -11,7 +11,7 @@ Public Sub validate()
   Call resetValidationResult
 
   '// 各シートごとのバリデーション(エラー時にはそれぞれがinvalidを登録する)
-  'Call sandbox.validate
+  Call index_sht.validate
 
   Call Util.showTime(Timer - startTime)
   Debug.Print "|----|---- validation end ----|----|"
