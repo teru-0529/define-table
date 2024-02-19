@@ -1,3 +1,4 @@
+-- is_master_table=false
 
 -- 2.受注(orders)
 
@@ -11,9 +12,12 @@ CREATE TABLE received_order.orders (
   comment text check (LENGTH(comment) >= 10),
   created_at timestamp NOT NULL DEFAULT current_timestamp,
   updated_at timestamp NOT NULL DEFAULT current_timestamp,
-  created_by varchar(30),
-  updated_by varchar(30)
+  created_by varchar(50),
+  updated_by varchar(50)
 );
+
+-- Set Table Comment
+COMMENT ON TABLE received_order.orders IS '受注';
 
 -- Set Column Comment
 COMMENT ON COLUMN received_order.orders.received_order_no IS '受注No';

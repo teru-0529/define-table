@@ -1,3 +1,4 @@
+-- is_master_table=false
 
 -- 3.受注明細(order_details)
 
@@ -10,9 +11,12 @@ CREATE TABLE received_order.order_details (
   price integer check (price >= 0),
   created_at timestamp NOT NULL DEFAULT current_timestamp,
   updated_at timestamp NOT NULL DEFAULT current_timestamp,
-  created_by varchar(30),
-  updated_by varchar(30)
+  created_by varchar(50),
+  updated_by varchar(50)
 );
+
+-- Set Table Comment
+COMMENT ON TABLE received_order.order_details IS '受注明細';
 
 -- Set Column Comment
 COMMENT ON COLUMN received_order.order_details.received_order_no IS '受注No';

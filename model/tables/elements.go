@@ -98,6 +98,60 @@ func (element *Element) toExcel() string {
 	return strings.Join(ary, "\t")
 }
 
+// nameJp → nameEn
+func (elements *Elements) NameEn(nameJp string) string {
+	element, ok := elements.eMap[nameJp]
+	if !ok {
+		return "N/A"
+	}
+	return element.NameEn
+}
+
+// nameJp → ddlField
+func (elements *Elements) DDLField(field Field) string {
+	element, ok := elements.eMap[field.Name]
+	if !ok {
+		return "N/A"
+	}
+	result := []string{element.NameEn, element.DbModel}
+	if !field.Nullable {
+		result = append(result, "NOT NULL")
+	}
+	if field.Default != nil {
+		if element.IsDefaultStr {
+			result = append(result, fmt.Sprintf("DEFAULT '%s'", *field.Default))
+		} else {
+			result = append(result, fmt.Sprintf("DEFAULT %s", *field.Default))
+		}
+	}
+	if element.Constraint != "" {
+		result = append(result, fmt.Sprintf("check %s", element.Constraint))
+	}
+
+	return strings.Join(result, " ")
+}
+
+// nameJp → mdField
+func (elements *Elements) MdField(field Field) string {
+	element, ok := elements.eMap[field.Name]
+	if !ok {
+		return "N/A"
+	}
+	default_ := ""
+	if field.Default != nil {
+		default_ = *field.Default
+	}
+	return fmt.Sprintf(
+		"%s(%s) | %s | %t | %s | %s",
+		element.NameJp,
+		element.NameEn,
+		element.DbModel,
+		!field.Nullable,
+		default_,
+		element.Constraint,
+	)
+}
+
 // db制約
 func dbModel(element elements.Element) string {
 	if element.Domain == elements.SEQUENCE {

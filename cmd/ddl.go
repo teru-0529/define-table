@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/teru-0529/define-table/v3/model/tables"
 )
 
 var ddlDir string
 var saveHistry bool
-var createrLength int16
 
 // ddlCmd represents the ddl command
 var ddlCmd = &cobra.Command{
@@ -20,14 +20,31 @@ var ddlCmd = &cobra.Command{
 	Short: "output ddl from savedata.yaml",
 	Long:  "output ddl from savedata.yaml",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fileCount := 3
+
+		// INFO: save-dataの読込み
+		monad, err := tables.New(savedataPath)
+		if err != nil {
+			return err
+		}
+
+		// INFO: save-data(elements)の読込み
+		elements, err := tables.NewElements(elementsPath)
+		if err != nil {
+			return err
+		}
 
 		fmt.Printf("input yaml file: [%s]\n", filepath.ToSlash(filepath.Clean(savedataPath)))
 		fmt.Printf("input elements file: [%s]\n", filepath.ToSlash(filepath.Clean(elementsPath)))
-		fmt.Printf("output ddl dir: [%s]\n", filepath.ToSlash(ddlDir))
-		fmt.Printf("%d ddl files created", fileCount)
+
+		// INFO: ddlの生成
+		fileCount, err := monad.CreateDdl(ddlDir, *elements, saveHistry)
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("%d ddl files created\n", fileCount)
 		if saveHistry {
-			fmt.Printf("ddl added history insert function")
+			fmt.Println("ddl added history insert function.")
 		}
 		fmt.Println("***command[ddl] completed.")
 		return nil
@@ -35,7 +52,6 @@ var ddlCmd = &cobra.Command{
 }
 
 func init() {
-	ddlCmd.Flags().StringVarP(&ddlDir, "ddl-dir", "O", "./ddl", "output directory.")
+	ddlCmd.Flags().StringVarP(&ddlDir, "ddl-dir", "O", "./out", "output directory.")
 	ddlCmd.Flags().BoolVarP(&saveHistry, "save-history", "H", false, "create history insert function by option flag.")
-	ddlCmd.Flags().Int16VarP(&createrLength, "creater-id-length", "L", 30, "createBy/updateBy field lemgth.")
 }
