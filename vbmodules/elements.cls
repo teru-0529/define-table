@@ -11,6 +11,11 @@ Option Explicit
 
 Const COL_NAME_JP = 1
 
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+  '// ペースト無効
+  Application.CutCopyMode = False
+End Sub
+
 '// データLoad(From yaml)
 Public Sub load(ByVal data As String)
   Dim records() As String, items() As String
@@ -22,7 +27,7 @@ Public Sub load(ByVal data As String)
   '// 行ごとのデータに分割
   records = Split(data, vbLf)
   rowLength = UBound(records)
-  ReDim wkRange(rowLength - 1, 8)
+  ReDim wkRange(rowLength - 1, 7)
   
   '// 列ごとの配列に変換
   For i = 0 To rowLength - 1
@@ -33,14 +38,13 @@ Public Sub load(ByVal data As String)
     wkRange(i, 2) = items(2) 'DB型
     wkRange(i, 3) = items(3) 'チェック制約
     wkRange(i, 4) = items(4) '強制NOTNULL
-    wkRange(i, 5) = items(5) '文字列デフォルト有無
-    wkRange(i, 6) = items(6) '説明
-    wkRange(i, 7) = items(7) '派生項目
-    wkRange(i, 8) = items(8) '派生元
+    wkRange(i, 5) = items(5) '説明
+    wkRange(i, 6) = items(6) '派生項目
+    wkRange(i, 7) = items(7) '派生元
   Next i
 
   '// 値セット
-  Cells(2, COL_NAME_JP).Resize(rowLength, 9) = wkRange
+  Cells(2, COL_NAME_JP).Resize(rowLength, 8) = wkRange
 
   '// フォーマット
   Call areaFormat
@@ -56,9 +60,9 @@ Private Sub areaFormat()
   Call Formatter.notInput(Range("DATA_AREA"))
 
   '// 表示形式
-  Call Formatter.formatLocal(Range("DATA_AREA_H"), """○"";;;")
+  Call Formatter.formatLocal(Range("DATA_AREA_G"), """○"";;;")
 
   '// 表示形式
-  Call Formatter.horizontalPosition(Range("DATA_AREA_H"), xlCenter)
+  Call Formatter.horizontalPosition(Range("DATA_AREA_G"), xlCenter)
 
 End Sub

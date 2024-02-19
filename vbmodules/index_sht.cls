@@ -9,6 +9,11 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+  '// ペースト無効
+  Application.CutCopyMode = False
+End Sub
+
 ' ダブルクリック時の処理（新規テーブル作成）
 Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
   Dim rc As Integer

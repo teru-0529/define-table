@@ -90,7 +90,6 @@ func (element *Element) toExcel() string {
 		element.DbModel,
 		element.Constraint,
 		lo.Ternary(element.MustNotNull, "true", "false"),
-		lo.Ternary(element.IsDefaultStr, "true", "false"),
 		element.Description,
 		lo.Ternary(element.IsOrigin, "0", "1"),
 		element.OriginName,
