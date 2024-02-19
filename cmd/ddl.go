@@ -42,11 +42,11 @@ var ddlCmd = &cobra.Command{
 			return err
 		}
 
-		fmt.Printf("%d ddl files created\n", fileCount)
+		fmt.Printf("%d ddl files created", fileCount)
 		if saveHistry {
-			fmt.Println("ddl added history insert function.")
+			fmt.Println("(added history insert function.)")
 		}
-		fmt.Println("***command[ddl] completed.")
+		fmt.Println("\n***command[ddl] completed.")
 		return nil
 	},
 }

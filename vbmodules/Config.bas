@@ -26,7 +26,7 @@ Public DDL_DIR As String
 '// 操作モード
 Dim FULL_VERSION As String
 Public OPERATION_MODE As String
-Dim SAVE_HISTORY_FUNC As Boolean
+Public SAVE_HISTORY_FUNC As Boolean
 
 '// スキーマ名取得
 Public Function getSchemaJp() As String
@@ -87,10 +87,10 @@ Public Sub init(ByVal iniFile As String)
   ELEMENTS_DATA = absPath(getIniValue("Path", "elementsData", iniPath))
   Debug.Print "[config] ELEMENTS_DATA: " & ELEMENTS_DATA
 
-  DDL_VIEW = absPath(getIniValue("Path", "view", iniPath))
+  DDL_VIEW = absPath(getIniValue("Path", "viewDir", iniPath))
   Debug.Print "[config] DDL_VIEW: " & DDL_VIEW
 
-  DDL_DIR = absPath(getIniValue("Path", "ddlDor", iniPath))
+  DDL_DIR = absPath(getIniValue("Path", "ddlDir", iniPath))
   Debug.Print "[config] DDL_DIR: " & DDL_DIR
 
   OPERATION_MODE = getIniValue("Operation", "mode", iniPath)

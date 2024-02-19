@@ -116,9 +116,9 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 	file.WriteString("  FOR EACH ROW\nEXECUTE PROCEDURE set_updated_at()\n")
 
 	// INFO:TODO: 履歴登録Trigger書き込み
-	if saveHistory {
-		fmt.Println("saveHistory")
-	}
+	// if saveHistory {
+	// 	fmt.Println("saveHistory")
+	// }
 
 	fmt.Printf("output ddl file: [%s]\n", filepath.ToSlash(path))
 	return nil
