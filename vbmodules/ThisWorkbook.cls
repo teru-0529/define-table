@@ -38,6 +38,18 @@ Private Sub Workbook_Open()
   Application.ScreenUpdating = False
   Application.EnableEvents = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  '// 入力ファイルの存在チェック
+  If Not Util.existFile(ELEMENTS_DATA) Then
+    MsgBox "項目定義の入力ファイルが存在しません" & vbCrLf & "[" & ELEMENTS_DATA & "]" & _
+    vbCrLf & vbCrLf & "vba.ini(elementsData) に正しいパスを指定してください"
+    '// 保存せず終了する
+    ThisWorkbook.Close SaveChanges:=False
+  End If
+  
+  If Not Util.existFile(SAVE_DATA) Then
+    MsgBox "入出力ファイルが存在しないため空シートを生成します" & vbCrLf & "[" & SAVE_DATA & "]"
+  End If
+  
   '// 項目定義の取得
   Call elements.load(outerExec("loadElements -I " & ELEMENTS_DATA))
   Call Config.setModifyDatetime

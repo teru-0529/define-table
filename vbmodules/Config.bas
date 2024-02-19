@@ -122,7 +122,7 @@ End Function
 
 '// XV“úæ“¾
 Private Function getModifyTime(ByVal path As String) As String
-  If CreateObject("Scripting.FileSystemObject").fileexists(path) = False Then
+  If CreateObject("Scripting.FileSystemObject").FileExists(path) = False Then
     MsgBox "[" & path & "] ‚Í‘¶İ‚µ‚Ü‚¹‚ñB"
     getModifyTime = ""
     Exit Function
