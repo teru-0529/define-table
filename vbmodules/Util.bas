@@ -61,3 +61,9 @@ Public Sub invalidTableSheet(ByVal sht As Worksheet, ByVal is_error As Boolean)
     sht.Tab.Color = RGB(255, 255, 255) 'WHITE
   End If
 End Sub
+
+'// 入力ファイルの存在チェック
+Public Function existFile(ByVal path As String) As Boolean
+  existFile = CreateObject("Scripting.FileSystemObject").FileExists(path)
+End Function
+
