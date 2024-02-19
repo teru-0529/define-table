@@ -73,52 +73,7 @@ Public Sub dropTable(ByVal tableNo As Long)
   Util.unionRange(Cells(tableNo + 1, 3), Cells(tableNo + 1, 6)).ClearContents
 End Sub
 
-
 '// 入力バリデーション
 Public Sub validate()
   If Range("ERRORS").Value > 0 Then Call Process.invalid
 End Sub
-
-
-
-  '// FIXME:★★★★★
-'save_data.yaml.出力
-Public Sub save_(ByVal line_sep As Integer)
-  Dim data() As String, Target As Range
-  
-  For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).save_(data)
-  Next
-  
-  Call text_io.plain_out(SAVE_DATA, data, line_sep)
-End Sub
-
-  '// FIXME:★★★★★
-'ddl.出力
-Public Sub out_ddl(ByVal line_sep As Integer)
-  Dim Target As Range
-  
-  For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).out_ddl(line_sep)
-  Next
-  
-End Sub
-
-
-
-  '// FIXME:★★★★★
-'view_md.出力
-Public Sub out_view_md(ByVal line_sep As Integer)
-  Dim data() As String, Target As Range
-  
-  Call push_array(data, "# テーブル定義")
-  Call push_array(data, "----------")
-  
-  For Each Target In Range("DATA_AREA_JP")
-    If Target.Offset(, 4).Value Then Call Worksheets(Target.Value).out_view_md(data)
-  Next
-  
-  Call push_array(data, "")
-  Call text_io.plain_out(DDL_VIEW, data, line_sep)
-End Sub
-

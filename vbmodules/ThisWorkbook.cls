@@ -68,7 +68,7 @@ End Sub
 
 ' 保存時
 Private Sub Workbook_AfterSave(ByVal Success As Boolean)
-  Dim message As String
+  Dim message As String, addHistoryFlag As String
   
   '// パス情報の取得
   Call Config.init("vba.ini")
@@ -81,9 +81,13 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
     '// Yamlファイルの出力
     Call outerExec("save -D " & SAVE_DATA & " -E " & ThisWorkbook.FullName)
     
-    '// FIXME:★★★★★
-    Call index_sht.out_ddl(adLF)
-    Call index_sht.out_view_md(adLF)
+    '// DDLファイルの出力
+    If SAVE_HISTORY_FUNC Then addHistoryFlag = " -H"
+    Call outerExec("ddl -D " & SAVE_DATA & " -I " & ELEMENTS_DATA & " -O " & DDL_DIR & addHistoryFlag)
+    
+    '// MDファイルの出力
+    Call outerExec("view -D " & SAVE_DATA & " -I " & ELEMENTS_DATA & " -O " & DDL_VIEW)
+    
     message = "管理用yamlファイル、DDLを作成しました。"
 
   Else

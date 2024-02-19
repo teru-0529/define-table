@@ -7,12 +7,10 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/teru-0529/define-monad/v3/model/elements"
+	"github.com/teru-0529/define-table/v3/model/tables"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 )
-
-var elementsFile string
 
 // loadElementsCmd represents the loadElements command
 var loadElementsCmd = &cobra.Command{
@@ -21,15 +19,15 @@ var loadElementsCmd = &cobra.Command{
 	Long:  "input data from define-elements.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		// INFO: save-dataの読込み
-		monad, err := elements.New(elementsFile)
+		// INFO: save-data(elements)の読込み
+		elements, err := tables.NewElements(elementsPath)
 		if err != nil {
 			return err
 		}
 
 		enc := japanese.ShiftJIS.NewEncoder()
 
-		for _, rec := range monad.TotableElements() {
+		for _, rec := range elements.ToExcel() {
 			// sjisに変換
 			sjis, _, _ := transform.String(enc, rec)
 			fmt.Println(sjis)
@@ -39,7 +37,4 @@ var loadElementsCmd = &cobra.Command{
 }
 
 func init() {
-	loadElementsCmd.Flags().StringVarP(&elementsFile, "elements-file", "I", "", "input file name.")
-
-	loadElementsCmd.MarkFlagRequired("elements-file")
 }

@@ -16,6 +16,7 @@ var (
 	releaseDate string
 )
 var savedataPath string
+var elementsPath string
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
@@ -45,12 +46,15 @@ func init() {
 	rootCmd.AddCommand(saveCmd)
 	rootCmd.AddCommand(loadCmd)
 	rootCmd.AddCommand(loadElementsCmd)
+	rootCmd.AddCommand(ddlCmd)
+	rootCmd.AddCommand(viewCmd)
 	rootCmd.AddCommand(convertCmd)
 
 	// TODO:cofigファイルの定義(viper)は未整備
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.define-monad.yaml)")
 	// INFO:フラグ値を変数にBind
-	rootCmd.PersistentFlags().StringVarP(&savedataPath, "save-data", "D", "./save_data.yaml", "save-data path")
+	rootCmd.PersistentFlags().StringVarP(&savedataPath, "save-data", "D", "./save_data.yaml", "save-data path.")
+	rootCmd.PersistentFlags().StringVarP(&elementsPath, "elements", "I", "./elements_save_data.yaml", "elements-data file path.")
 }
 
 // initConfig reads in config file and ENV variables if set.
