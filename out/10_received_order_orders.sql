@@ -55,7 +55,7 @@ BEGIN
   ELSIF (TG_OP = 'INSERT') THEN
     INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)
     SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'INSERT', NEW.received_order_no;
-  ENDIF;
+  END IF;
   RETURN null;
 END;
 $$ LANGUAGE plpgsql;
