@@ -10,7 +10,7 @@ import (
 
 const DDL_FILE_SUFFIX = "10"
 const FK_DDL_FILE_SUFFIX = "11"
-const AUDIT_IDENTIFY_LENGTH = 50
+const AUDIT_IDENTIFY_LENGTH = 58
 
 // ddl生成
 func (savedata *SaveData) CreateDdl(ddlDir string, elements Elements, saveHistry bool) (int, error) {
@@ -110,15 +110,36 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 
 	// INFO: 更新日時設定Trigger書き込み
 	file.WriteString("\n-- Create 'set_update_at' Trigger\n")
-	file.WriteString(fmt.Sprintf("CREATE TRIGGER %s_updated\n", table.NameEn))
+	file.WriteString("CREATE TRIGGER set_updated_at\n")
 	file.WriteString("  BEFORE UPDATE\n")
 	file.WriteString(fmt.Sprintf("  ON %s.%s\n", schema.NameEn, table.NameEn))
-	file.WriteString("  FOR EACH ROW\nEXECUTE PROCEDURE set_updated_at()\n")
+	file.WriteString("  FOR EACH ROW\nEXECUTE PROCEDURE set_updated_at();\n")
 
-	// INFO:TODO: 履歴登録Trigger書き込み
-	// if saveHistory {
-	// 	fmt.Println("saveHistory")
-	// }
+	// INFO:TODO: 履歴登録Function/Trigger書き込み
+	if saveHistory {
+		file.WriteString("\n-- Create 'append_history' Function\n")
+		file.WriteString(fmt.Sprintf("DROP FUNCTION IF EXISTS %s.%s_audit();\n", schema.NameEn, table.NameEn))
+		file.WriteString(fmt.Sprintf("CREATE OR REPLACE FUNCTION %s.%s_audit() RETURNS TRIGGER AS $$\n", schema.NameEn, table.NameEn))
+		file.WriteString("BEGIN\n  IF (TG_OP = 'DELETE') THEN\n")
+		file.WriteString("    INSERT INTO operation_histories(schema_name, table_name, operation_type, table_key)\n")
+		file.WriteString(fmt.Sprintf("    SELECT TG_TABLE_SCHEMA, TG_TABLE_NAME, 'DELETE', %s;\n", table.keyStr("OLD", elements)))
+
+		file.WriteString("  ELSIF (TG_OP = 'UPDATE') THEN\n")
+		file.WriteString("    INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)\n")
+		file.WriteString(fmt.Sprintf("    SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'UPDATE', %s;\n", table.keyStr("NEW", elements)))
+
+		file.WriteString("  ELSIF (TG_OP = 'INSERT') THEN\n")
+		file.WriteString("    INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)\n")
+		file.WriteString(fmt.Sprintf("    SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'INSERT', %s;\n", table.keyStr("NEW", elements)))
+
+		file.WriteString("  END IF;\n  RETURN null;\nEND;\n$$ LANGUAGE plpgsql;\n")
+
+		file.WriteString("\n-- Create 'audit' Trigger\n")
+		file.WriteString("CREATE TRIGGER audit\n")
+		file.WriteString("  AFTER INSERT OR UPDATE OR DELETE\n")
+		file.WriteString(fmt.Sprintf("  ON %s.%s\n", schema.NameEn, table.NameEn))
+		file.WriteString(fmt.Sprintf("  FOR EACH ROW\nEXECUTE PROCEDURE %s.%s_audit();\n", schema.NameEn, table.NameEn))
+	}
 
 	fmt.Printf("output ddl file: [%s]\n", filepath.ToSlash(path))
 	return nil
@@ -130,4 +151,12 @@ func addAuditFields(fields []string) []string {
 	fields = append(fields, fmt.Sprintf("  created_by varchar(%d)", AUDIT_IDENTIFY_LENGTH))
 	fields = append(fields, fmt.Sprintf("  updated_by varchar(%d)", AUDIT_IDENTIFY_LENGTH))
 	return fields
+}
+
+func (table *Table) keyStr(prefix string, elements Elements) string {
+	keys := []string{}
+	for _, pk := range table.Constraint.PraimaryKey {
+		keys = append(keys, fmt.Sprintf("%s.%s", prefix, elements.NameEn(pk)))
+	}
+	return strings.Join(keys, " || '-' || ")
 }
