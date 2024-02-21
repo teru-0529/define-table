@@ -1,6 +1,6 @@
 data_type: define_tables
-version: 3.0.0-rc.5
-create_at: 2024-02-19T07:30:17+09:00
+version: 3.1.0
+create_at: 2024-02-21T20:18:54+09:00
 schema:
   name_jp: 受注
   name_en: received_order

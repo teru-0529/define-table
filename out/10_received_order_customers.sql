@@ -12,8 +12,8 @@ CREATE TABLE received_order.customers (
   registration_date date NOT NULL DEFAULT current_timestamp,
   created_at timestamp NOT NULL DEFAULT current_timestamp,
   updated_at timestamp NOT NULL DEFAULT current_timestamp,
-  created_by varchar(50),
-  updated_by varchar(50)
+  created_by varchar(58),
+  updated_by varchar(58)
 );
 
 -- Set Table Comment
@@ -46,8 +46,33 @@ ALTER TABLE received_order.customers ADD CONSTRAINT customers_unique_2 UNIQUE (
 );
 
 -- Create 'set_update_at' Trigger
-CREATE TRIGGER customers_updated
+CREATE TRIGGER set_updated_at
   BEFORE UPDATE
   ON received_order.customers
   FOR EACH ROW
-EXECUTE PROCEDURE set_updated_at()
+EXECUTE PROCEDURE set_updated_at();
+
+-- Create 'append_history' Function
+DROP FUNCTION IF EXISTS received_order.customers_audit();
+CREATE OR REPLACE FUNCTION received_order.customers_audit() RETURNS TRIGGER AS $$
+BEGIN
+  IF (TG_OP = 'DELETE') THEN
+    INSERT INTO operation_histories(schema_name, table_name, operation_type, table_key)
+    SELECT TG_TABLE_SCHEMA, TG_TABLE_NAME, 'DELETE', OLD.customer_id;
+  ELSIF (TG_OP = 'UPDATE') THEN
+    INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)
+    SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'UPDATE', NEW.customer_id;
+  ELSIF (TG_OP = 'INSERT') THEN
+    INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)
+    SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'INSERT', NEW.customer_id;
+  ENDIF;
+  RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create 'audit' Trigger
+CREATE TRIGGER audit
+  AFTER INSERT OR UPDATE OR DELETE
+  ON received_order.customers
+  FOR EACH ROW
+EXECUTE PROCEDURE received_order.customers_audit();
