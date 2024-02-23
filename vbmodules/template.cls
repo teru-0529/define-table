@@ -13,16 +13,6 @@ Const COL_NOTNULL = 5
 Const COL_DEFAULT = 6
 Const COL_FORCE_NOTNULL = 8
 
-Private Sub Worksheet_Activate()
-  '// テーブルリストの最新化
-  Application.ScreenUpdating = False
-  Application.EnableEvents = False
-  Call Tables.createTableList(Worksheets(Name))
-  Application.EnableEvents = True
-  Application.Calculate
-  Application.ScreenUpdating = True
-End Sub
-
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
   '// ペースト無効
   'Application.CutCopyMode = False

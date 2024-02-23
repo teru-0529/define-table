@@ -112,6 +112,16 @@ Public Sub createFieldList(sht As Worksheet)
   Next src
 End Sub
 
+'// テーブルリストを最新化する
+Public Sub ListUpdate()
+  Dim Target As Worksheet
+
+  For Each Target In Worksheets
+    If isTable(Target) Then Call createTableList(Target)
+  Next Target
+  Debug.Print "[tableListUpdated]"
+End Sub
+
 '// テーブルリストの生成
 Public Sub createTableList(sht As Worksheet)
   Dim table As Range, ws As Worksheet

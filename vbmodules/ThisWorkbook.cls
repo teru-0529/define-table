@@ -56,7 +56,11 @@ Private Sub Workbook_Open()
 
   '// 読込み
   Call index_sht.load(outerExec("load -D " & SAVE_DATA))
+  
+  '// テーブルリストの最新化
+  Call Tables.ListUpdate
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  
   Application.EnableEvents = True
   Application.Calculate
   Application.ScreenUpdating = True
