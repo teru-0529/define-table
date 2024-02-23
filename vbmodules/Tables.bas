@@ -24,15 +24,11 @@ Public Sub Delete()
   Dim Target As Worksheet
 
   For Each Target In Worksheets
-    Select Case Target.Name
-      Case elements.Name, index_sht.Name, template.Name, work.Name
-
-      Case Else
-        Application.DisplayAlerts = False
-        Target.Delete
-        Application.DisplayAlerts = True
-        
-     End Select
+    If isTable(Target) Then
+      Application.DisplayAlerts = False
+      Target.Delete
+      Application.DisplayAlerts = True
+    End If
   Next Target
 End Sub
 
@@ -115,3 +111,33 @@ Public Sub createFieldList(sht As Worksheet)
     End If
   Next src
 End Sub
+
+'// テーブルリストの生成
+Public Sub createTableList(sht As Worksheet)
+  Dim table As Range, ws As Worksheet
+
+  '// リストのクリア
+  sht.Range("TABLE_AREA").ClearContents
+  sht.Range("TABLE_AREA").Resize(1).Value = "N/A"
+
+  '// 登録位置
+  Set table = sht.Range("TABLE_AREA").Resize(1)
+
+  For Each ws In ThisWorkbook.Worksheets
+    '// 自身を除くテーブルシートの場合にリストに追加
+    If isTable(ws) And ws.Name <> sht.Name Then
+      table.Value = ws.Name
+      Set table = table.Offset(1)
+    End If
+  Next ws
+End Sub
+
+'// テーブルシートかどうかを返す
+Private Function isTable(ws As Worksheet) As Boolean
+  Select Case ws.Name
+    Case elements.Name, index_sht.Name, work.Name, template.Name
+      isTable = False
+    Case Else
+      isTable = True
+  End Select
+End Function
