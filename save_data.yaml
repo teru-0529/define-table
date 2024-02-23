@@ -1,6 +1,6 @@
 data_type: define_tables
 version: dev
-create_at: 2024-02-23T23:46:51+09:00
+create_at: 2024-02-23T23:53:36+09:00
 schema:
   name_jp: 受注
   name_en: received_order
@@ -112,8 +112,8 @@ tables:
       foreign_keys:
         - name: order_details_foreignKey_1
           reference_table: 受注
-          delete_option: null
-          update_option: null
+          delete_option: CASCADE
+          update_option: CASCADE
           fields:
             - this: 受注No
               ref: 受注No
