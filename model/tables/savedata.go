@@ -28,7 +28,7 @@ type Table struct {
 	IsMaster   bool       `yaml:"is_master"`
 	Fields     []Field    `yaml:"fields"`
 	Constraint Constraint `yaml:"constraint"`
-	Indexes    []Fields   `yaml:"indexes"`
+	Indexes    []Index    `yaml:"indexes"`
 }
 
 type Field struct {
@@ -59,6 +59,17 @@ type ForeignKey struct {
 type ForeignField struct {
 	ThisField string `yaml:"this"`
 	RefField  string `yaml:"ref"`
+}
+
+type Index struct {
+	Name   string       `yaml:"name"`
+	Unique bool         `yaml:"unique"`
+	Fields []IndexField `yaml:"fields"`
+}
+
+type IndexField struct {
+	Field string `yaml:"name"`
+	Asc   bool   `yaml:"asc"`
 }
 
 func New(path string) (*SaveData, error) {

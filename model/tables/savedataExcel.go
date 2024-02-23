@@ -39,6 +39,7 @@ func createTable(f *excelize.File, sht string) Table {
 	isMaster := getValue(f, sht, 2, 6) == "○"
 	table := Table{NameJp: sht, NameEn: tableEn, IsMaster: isMaster}
 
+	// フィールド
 	for i := 6; i < 106; i++ {
 		fieldName := getValue(f, sht, i, 2)
 		if fieldName != "" {
@@ -50,6 +51,7 @@ func createTable(f *excelize.File, sht string) Table {
 		}
 	}
 
+	// PK
 	for i := 12; i < 17; i++ {
 		pkField := getValue(f, sht, 8, i)
 		if pkField != "" {
@@ -57,6 +59,7 @@ func createTable(f *excelize.File, sht string) Table {
 		}
 	}
 
+	// ユニーク制約
 	no := 0
 	for i := 13; i < 23; i++ {
 		concat := getValue(f, sht, i, 18)
@@ -73,93 +76,58 @@ func createTable(f *excelize.File, sht string) Table {
 		}
 	}
 
+	// FK制約
+	no = 0
+	for _, i := range []int{27, 32, 37, 42, 47} {
+		concat := getValue(f, sht, i, 19)
+		if concat != "" {
+
+			no += 1
+			deleteOption := getValue(f, sht, i-1, 14)
+			updateOption := getValue(f, sht, i-1, 16)
+			foreignKey := ForeignKey{
+				Name:         fmt.Sprintf("%s_foreignKey_%d", tableEn, no),
+				RefTable:     getValue(f, sht, i-1, 12),
+				DeleteOption: lo.Ternary(deleteOption == "", nil, &deleteOption),
+				UpdateOption: lo.Ternary(updateOption == "", nil, &updateOption),
+			}
+			for j := 12; j < 17; j++ {
+				field := getValue(f, sht, i+1, j)
+				if field != "" {
+					fkField := ForeignField{
+						ThisField: field,
+						RefField:  getValue(f, sht, i+2, j),
+					}
+					foreignKey.Fields = append(foreignKey.Fields, fkField)
+				}
+			}
+			table.Constraint.ForeignKeys = append(table.Constraint.ForeignKeys, foreignKey)
+		}
+	}
+
+	// インデックス
+	no = 0
+	for _, i := range []int{55, 57, 59, 61, 63} {
+		concat := getValue(f, sht, i, 18)
+		if concat != "" {
+			no += 1
+			index := Index{
+				Name:   fmt.Sprintf("idx_%s_%d", tableEn, no),
+				Unique: getValue(f, sht, i+1, 11) == "UNIQUE",
+			}
+			for j := 12; j < 17; j++ {
+				field := getValue(f, sht, i, j)
+				if field != "" {
+					field := IndexField{Field: field, Asc: getValue(f, sht, i+1, j) != "DESC"}
+					index.Fields = append(index.Fields, field)
+				}
+			}
+			table.Indexes = append(table.Indexes, index)
+		}
+	}
+
 	return table
 }
-
-// cell, _ := f.GetCellValue(SHT_INDEX, "C3")
-// fmt.Println(cell)
-
-// // INFO: [項目]シートデータ取得
-// rows, err := f.GetRows(SHT_ELEMENTS)
-// if err != nil {
-// 	return nil, err
-// }
-// for _, row := range rows[1:] { // ヘッダー行は読み飛ばす
-// 	if row[0] == "" {
-// 		// 空行は読み飛ばす
-// 		continue
-// 	}
-// 	element := Element{}
-// 	element.NameJp = row[0]
-// 	element.NameEn = row[1]
-// 	element.Domain = Dom(row[3])
-// 	if row[4] != "" {
-// 		element.RegEx = &row[4]
-// 	}
-// 	if row[5] != "" {
-// 		str := strings.Replace(row[5], ",", "", -1)
-// 		num, _ := strconv.Atoi(str)
-// 		element.MinDigits = &num
-// 	}
-// 	if row[6] != "" {
-// 		str := strings.Replace(row[6], ",", "", -1)
-// 		num, _ := strconv.Atoi(str)
-// 		element.MaxDigits = &num
-// 	}
-// 	if row[7] != "" {
-// 		str := strings.Replace(row[7], ",", "", -1)
-// 		num, _ := strconv.Atoi(str)
-// 		element.MinValue = &num
-// 	}
-// 	if row[8] != "" {
-// 		str := strings.Replace(row[8], ",", "", -1)
-// 		num, _ := strconv.Atoi(str)
-// 		element.MaxValue = &num
-// 	}
-// 	element.Example = row[9]
-// 	element.Description = row[10]
-
-// 	savedata.Elements = append(savedata.Elements, element)
-// }
-
-// // INFO: [別名]シートデータ取得
-// rows, err = f.GetRows(SHT_DERIVE_ELEMENTS)
-// if err != nil {
-// 	return nil, err
-// }
-// for _, row := range rows[1:] { // ヘッダー行は読み飛ばす
-// 	if row[0] == "" {
-// 		// 空行は読み飛ばす
-// 		continue
-// 	}
-// 	element := DeliveElement{}
-// 	element.Origin = row[0]
-// 	element.NameJp = row[1]
-// 	element.NameEn = row[2]
-// 	element.Description = row[4]
-
-// 	savedata.DeliveElements = append(savedata.DeliveElements, element)
-// }
-
-// // INFO: [区分値]シートデータ取得
-// rows, err = f.GetRows(SHT_SEGMENTS)
-// if err != nil {
-// 	return nil, err
-// }
-// for _, row := range rows[1:] { // ヘッダー行は読み飛ばす
-// 	if row[0] == "" {
-// 		// 空行は読み飛ばす
-// 		continue
-// 	}
-// 	element := Segment{}
-// 	element.Key = row[0]
-// 	element.Value = row[1]
-// 	element.Name = row[2]
-// 	element.Description = row[3]
-
-// 	savedata.Segments = append(savedata.Segments, element)
-// }
-// }
 
 func getValue(f *excelize.File, sht string, row int, col int) string {
 	address, _ := excelize.CoordinatesToCellName(col, row)
