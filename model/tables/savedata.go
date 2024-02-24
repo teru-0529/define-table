@@ -15,6 +15,7 @@ type SaveData struct {
 	CreateAt time.Time `yaml:"create_at"`
 	Schema   Schema    `yaml:"schema"`
 	Tables   []Table   `yaml:"tables"`
+	tMap     map[string]string
 }
 
 type Schema struct {
@@ -28,7 +29,7 @@ type Table struct {
 	IsMaster   bool       `yaml:"is_master"`
 	Fields     []Field    `yaml:"fields"`
 	Constraint Constraint `yaml:"constraint"`
-	Indexes    []Fields   `yaml:"indexes"`
+	Indexes    []Index    `yaml:"indexes"`
 }
 
 type Field struct {
@@ -61,6 +62,17 @@ type ForeignField struct {
 	RefField  string `yaml:"ref"`
 }
 
+type Index struct {
+	Name   string       `yaml:"name"`
+	Unique bool         `yaml:"unique"`
+	Fields []IndexField `yaml:"fields"`
+}
+
+type IndexField struct {
+	Field string `yaml:"name"`
+	Asc   bool   `yaml:"asc"`
+}
+
 func New(path string) (*SaveData, error) {
 	// INFO: read
 	file, err := os.ReadFile(path)
@@ -73,6 +85,12 @@ func New(path string) (*SaveData, error) {
 	err = yaml.Unmarshal([]byte(file), &ddls)
 	if err != nil {
 		return nil, err
+	}
+
+	// INFO: テーブル名mapの生成
+	ddls.tMap = map[string]string{}
+	for _, table := range ddls.Tables {
+		ddls.tMap[table.NameJp] = table.NameEn
 	}
 
 	return &ddls, nil
@@ -100,4 +118,13 @@ func (savedata *SaveData) Write(path string) error {
 	}
 
 	return nil
+}
+
+// nameJp → nameEn
+func (savedata SaveData) getNameEn(nameJp string) string {
+	nameEn, ok := savedata.tMap[nameJp]
+	if !ok {
+		return "N/A"
+	}
+	return nameEn
 }

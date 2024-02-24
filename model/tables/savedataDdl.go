@@ -5,11 +5,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/samber/lo"
 	"github.com/teru-0529/define-monad/v3/store"
 )
 
 const DDL_FILE_SUFFIX = "10"
-const FK_DDL_FILE_SUFFIX = "11"
+const AFTER_DDL_FILE_SUFFIX = "11"
 const AUDIT_IDENTIFY_LENGTH = 58
 
 // ddl生成
@@ -17,11 +18,12 @@ func (savedata *SaveData) CreateDdl(ddlDir string, elements Elements, saveHistry
 
 	// INFO: テーブル単位で処理
 	for tableNo, table := range savedata.Tables {
+		// INFO: DDLの生成
 		table.createDdl(tableNo+1, ddlDir, elements, savedata.Schema, saveHistry)
 
-		// INFO:TODO: 外部キー用DDLの生成
+		// INFO: 外部キー用DDLの生成
 		if len(table.Constraint.ForeignKeys) > 0 {
-			fmt.Println("DUMMY")
+			table.createAfterDdl(tableNo+1, ddlDir, elements, savedata.Schema, *savedata)
 		}
 	}
 
@@ -103,9 +105,28 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 		}
 	}
 
-	// INFO:TODO: index書き込み
+	// INFO: index書き込み
 	if len(table.Indexes) > 0 {
-		fmt.Println("dummy")
+		file.WriteString("\n-- create index")
+		for _, index := range table.Indexes {
+			file.WriteString(fmt.Sprintf(
+				"\nCREATE %sINDEX %s ON %s.%s (\n",
+				lo.Ternary(index.Unique, "UNIQUE ", ""),
+				index.Name,
+				schema.NameEn,
+				table.NameEn,
+			))
+			items := []string{}
+			for _, field := range index.Fields {
+				items = append(items, fmt.Sprintf(
+					"  %s%s",
+					elements.NameEn(field.Field),
+					lo.Ternary(field.Asc, "", " DESC"),
+				))
+			}
+			file.WriteString(strings.Join(items, ",\n"))
+			file.WriteString("\n);\n")
+		}
 	}
 
 	// INFO: 更新日時設定Trigger書き込み
@@ -115,7 +136,7 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 	file.WriteString(fmt.Sprintf("  ON %s.%s\n", schema.NameEn, table.NameEn))
 	file.WriteString("  FOR EACH ROW\nEXECUTE PROCEDURE set_updated_at();\n")
 
-	// INFO:TODO: 履歴登録Function/Trigger書き込み
+	// INFO: 履歴登録Function/Trigger書き込み
 	if saveHistory {
 		file.WriteString("\n-- Create 'append_history' Function\n")
 		file.WriteString(fmt.Sprintf("DROP FUNCTION IF EXISTS %s.%s_audit();\n", schema.NameEn, table.NameEn))
@@ -159,4 +180,64 @@ func (table *Table) keyStr(prefix string, elements Elements) string {
 		keys = append(keys, fmt.Sprintf("%s.%s", prefix, elements.NameEn(pk)))
 	}
 	return strings.Join(keys, " || '-' || ")
+}
+
+// ddlの書き込み
+func (table *Table) createAfterDdl(tableNo int, ddlDir string, elements Elements, schema Schema, sData SaveData) error {
+
+	// INFO: Fileの取得
+	path := filepath.Join(ddlDir, fmt.Sprintf("%s_%s_%s.sql", AFTER_DDL_FILE_SUFFIX, schema.NameEn, table.NameEn))
+	file, cleanup, err := store.NewFile(path)
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+
+	// INFO: header書き込み
+	file.WriteString("-- operation_afert_create_tables\n\n")
+	file.WriteString(fmt.Sprintf("-- %d.%s(%s)\n\n", tableNo, table.NameJp, table.NameEn))
+
+	// INFO: FK書き込み
+	file.WriteString("-- Set FK Constraint")
+	for _, fk := range table.Constraint.ForeignKeys {
+		file.WriteString(fmt.Sprintf(
+			"\nALTER TABLE %s.%s ADD CONSTRAINT %s FOREIGN KEY (\n",
+			schema.NameEn,
+			table.NameEn,
+			fk.Name,
+		))
+		// 自身のフィールド
+		items := []string{}
+		for _, field := range fk.Fields {
+			items = append(items, "  "+elements.NameEn(field.ThisField))
+		}
+		file.WriteString(strings.Join(items, ",\n"))
+		file.WriteString(fmt.Sprintf(
+			"\n) REFERENCES %s.%s (\n",
+			schema.NameEn,
+			sData.getNameEn(fk.RefTable),
+		))
+		// 参照元のフィールド
+		items = []string{}
+		for _, field := range fk.Fields {
+			items = append(items, "  "+elements.NameEn(field.RefField))
+		}
+		file.WriteString(strings.Join(items, ",\n"))
+		// オプション有無
+		deleteOption := ""
+		if fk.DeleteOption != nil {
+			deleteOption = fmt.Sprintf(" ON DELETE %s", *fk.DeleteOption)
+		}
+		updateOption := ""
+		if fk.UpdateOption != nil {
+			updateOption = fmt.Sprintf(" ON UPDATE %s", *fk.UpdateOption)
+		}
+		// if
+		file.WriteString(fmt.Sprintf(
+			"\n)%s%s;\n",
+			deleteOption,
+			updateOption,
+		))
+	}
+	return nil
 }

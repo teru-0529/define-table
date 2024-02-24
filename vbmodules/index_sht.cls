@@ -24,7 +24,12 @@ Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean
   
     Application.ScreenUpdating = False
     Application.EnableEvents = False
-    If rc = vbYes Then Call createTable(Target.Offset(, 2))
+    If rc = vbYes Then
+      '// テーブルシート作成
+      Call createTable(Target.Offset(, 2))
+      '// テーブルリストの最新化
+      Call Tables.ListUpdate
+    End If
     Application.EnableEvents = True
     Application.Calculate
     Application.ScreenUpdating = True

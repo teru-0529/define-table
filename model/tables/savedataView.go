@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/samber/lo"
 	"github.com/teru-0529/define-monad/v3/store"
 )
 
@@ -24,7 +25,7 @@ func (savedata *SaveData) CreateMd(viewDir string, elements Elements) error {
 
 	// INFO: テーブル単位での処理
 	for tableNo, table := range savedata.Tables {
-		table.createMd(*file, tableNo+1, elements)
+		table.createMd(*file, tableNo+1, elements, *savedata)
 	}
 
 	fmt.Printf("output md file: [%s]\n", filepath.ToSlash(path))
@@ -32,7 +33,7 @@ func (savedata *SaveData) CreateMd(viewDir string, elements Elements) error {
 }
 
 // mdの書き込み
-func (table *Table) createMd(file os.File, tableNo int, elements Elements) error {
+func (table *Table) createMd(file os.File, tableNo int, elements Elements, sData SaveData) error {
 
 	// INFO: テーブル名
 	file.WriteString(fmt.Sprintf("\n## #%d %s(%s)\n", tableNo, table.NameJp, table.NameEn))
@@ -64,14 +65,49 @@ func (table *Table) createMd(file os.File, tableNo int, elements Elements) error
 		}
 	}
 
-	// INFO:TODO: FK
+	// INFO: FK
 	if len(table.Constraint.ForeignKeys) > 0 {
 		file.WriteString("\n#### Foreign Keys\n")
+		for _, fk := range table.Constraint.ForeignKeys {
+			file.WriteString(fmt.Sprintf("\n#### %s\n\n", fk.Name))
+			file.WriteString(fmt.Sprintf("* 参照先テーブル : %s(%s)\n", fk.RefTable, sData.getNameEn(fk.RefTable)))
+			file.WriteString(fmt.Sprintf("* 削除時オプション : %s\n", lo.Ternary(lo.IsNil(fk.DeleteOption), "RESTRICT(デフォルト値)", *fk.DeleteOption)))
+			file.WriteString(fmt.Sprintf("* 更新時オプション : %s\n", lo.Ternary(lo.IsNil(fk.UpdateOption), "RESTRICT(デフォルト値)", *fk.UpdateOption)))
+			file.WriteString("\n| # | フィールド | 参照先フィールド |\n")
+			file.WriteString("| -- | -- | -- |\n")
+			for no, field := range fk.Fields {
+				file.WriteString(fmt.Sprintf(
+					"| %d | %s(%s) | %s(%s) |\n",
+					no+1,
+					field.ThisField,
+					elements.NameEn(field.ThisField),
+					field.RefField,
+					elements.NameEn(field.RefField),
+				))
+			}
+		}
 	}
 
-	// INFO:TODO: インデックス
+	// INFO: インデックス
 	if len(table.Indexes) > 0 {
 		file.WriteString("\n### Indexes\n")
+		for _, index := range table.Indexes {
+			file.WriteString(fmt.Sprintf("\n#### %s\n\n", index.Name))
+			if index.Unique {
+				file.WriteString("* ユニークINDEX\n\n")
+			}
+			file.WriteString("| # | フィールド | ASC/DESC |\n")
+			file.WriteString("| -- | -- | -- |\n")
+			for no, field := range index.Fields {
+				file.WriteString(fmt.Sprintf(
+					"| %d | %s(%s) | %s |\n",
+					no+1,
+					field.Field,
+					elements.NameEn(field.Field),
+					lo.Ternary(field.Asc, "ASC", "DESC"),
+				))
+			}
+		}
 	}
 
 	file.WriteString("\n----------\n")

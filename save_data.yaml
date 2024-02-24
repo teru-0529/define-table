@@ -1,6 +1,6 @@
 data_type: define_tables
-version: 3.1.0
-create_at: 2024-02-21T20:18:54+09:00
+version: 3.2.0
+create_at: 2024-02-24T19:22:38+09:00
 schema:
   name_jp: 受注
   name_en: received_order
@@ -24,19 +24,37 @@ tables:
       - name: 登録日
         nullable: false
         default: current_timestamp
+      - name: 商品担当者ID
+        nullable: false
+        default: null
     constraint:
       primary_key:
         - 得意先ID
       uniques:
         - name: customers_unique_1
           fields:
-            - 得意先
+            - 得意先ID
             - 担当者名
         - name: customers_unique_2
           fields:
             - 登録日
+        - name: customers_unique_3
+          fields:
+            - 商品担当者ID
       foreign_keys: []
-    indexes: []
+    indexes:
+      - name: idx_customers_1
+        unique: false
+        fields:
+          - name: 担当者名
+            asc: true
+      - name: idx_customers_2
+        unique: false
+        fields:
+          - name: 登録日
+            asc: true
+          - name: 取引先区分
+            asc: true
   - name_jp: 受注
     name_en: orders
     is_master: false
@@ -60,8 +78,24 @@ tables:
       primary_key:
         - 受注No
       uniques: []
-      foreign_keys: []
-    indexes: []
+      foreign_keys:
+        - name: orders_foreignKey_1
+          reference_table: 得意先
+          delete_option: null
+          update_option: null
+          fields:
+            - this: 得意先ID
+              ref: 得意先ID
+            - this: 担当者名
+              ref: 担当者名
+    indexes:
+      - name: idx_orders_1
+        unique: true
+        fields:
+          - name: 担当者名
+            asc: true
+          - name: 受注No
+            asc: true
   - name_jp: 受注明細
     name_en: order_details
     is_master: false
@@ -78,10 +112,34 @@ tables:
       - name: 定価
         nullable: true
         default: null
+      - name: 受注担当者ID
+        nullable: true
+        default: null
     constraint:
       primary_key:
         - 受注No
         - 商品No
       uniques: []
-      foreign_keys: []
-    indexes: []
+      foreign_keys:
+        - name: order_details_foreignKey_1
+          reference_table: 受注
+          delete_option: CASCADE
+          update_option: CASCADE
+          fields:
+            - this: 受注No
+              ref: 受注No
+        - name: order_details_foreignKey_2
+          reference_table: 得意先
+          delete_option: null
+          update_option: null
+          fields:
+            - this: 受注担当者ID
+              ref: 商品担当者ID
+    indexes:
+      - name: idx_order_details_1
+        unique: false
+        fields:
+          - name: 商品No
+            asc: true
+          - name: 数量
+            asc: false
