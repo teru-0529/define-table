@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/samber/lo"
 	"github.com/teru-0529/define-monad/v3/store"
 )
 
@@ -69,9 +70,26 @@ func (table *Table) createMd(file os.File, tableNo int, elements Elements) error
 		file.WriteString("\n#### Foreign Keys\n")
 	}
 
-	// INFO:TODO: インデックス
+	// INFO: インデックス
 	if len(table.Indexes) > 0 {
 		file.WriteString("\n### Indexes\n")
+		for _, index := range table.Indexes {
+			file.WriteString(fmt.Sprintf("\n#### %s\n\n", index.Name))
+			if index.Unique {
+				file.WriteString("* Unique Index\n\n")
+			}
+			file.WriteString("| # | フィールド | ASC/DESC |\n")
+			file.WriteString("| -- | -- | -- |\n")
+			for no, field := range index.Fields {
+				file.WriteString(fmt.Sprintf(
+					"| %d | %s(%s) | %s |\n",
+					no+1,
+					field.Field,
+					elements.NameEn(field.Field),
+					lo.Ternary(field.Asc, "ASC", "DESC"),
+				))
+			}
+		}
 	}
 
 	file.WriteString("\n----------\n")

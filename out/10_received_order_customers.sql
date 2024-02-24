@@ -45,6 +45,16 @@ ALTER TABLE received_order.customers ADD CONSTRAINT customers_unique_2 UNIQUE (
   registration_date
 );
 
+-- create index
+CREATE INDEX idx_customers_1 ON received_order.customers (
+  person_in_charge
+);
+
+CREATE INDEX idx_customers_2 ON received_order.customers (
+  registration_date,
+  customer_type
+);
+
 -- Create 'set_update_at' Trigger
 CREATE TRIGGER set_updated_at
   BEFORE UPDATE

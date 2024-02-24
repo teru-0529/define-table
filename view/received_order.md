@@ -31,6 +31,21 @@
 
 * 登録日(registration_date)
 
+### Indexes
+
+#### idx_customers_1
+
+| # | フィールド | ASC/DESC |
+| -- | -- | -- |
+| 1 | 担当者名(person_in_charge) | ASC |
+
+#### idx_customers_2
+
+| # | フィールド | ASC/DESC |
+| -- | -- | -- |
+| 1 | 登録日(registration_date) | ASC |
+| 2 | 取引先区分(customer_type) | ASC |
+
 ----------
 
 ## #2 受注(orders)
@@ -51,6 +66,19 @@
 
 * 受注No(received_order_no)
 
+#### Foreign Keys
+
+### Indexes
+
+#### idx_orders_1
+
+* Unique Index
+
+| # | フィールド | ASC/DESC |
+| -- | -- | -- |
+| 1 | 担当者名(person_in_charge) | ASC |
+| 2 | 受注No(received_order_no) | ASC |
+
 ----------
 
 ## #3 受注明細(order_details)
@@ -70,5 +98,16 @@
 
 * 受注No(received_order_no)
 * 商品No(product_no)
+
+#### Foreign Keys
+
+### Indexes
+
+#### idx_order_details_1
+
+| # | フィールド | ASC/DESC |
+| -- | -- | -- |
+| 1 | 商品No(product_no) | ASC |
+| 2 | 数量(quantity) | DESC |
 
 ----------

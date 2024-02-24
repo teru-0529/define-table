@@ -35,6 +35,12 @@ ALTER TABLE received_order.orders ADD PRIMARY KEY (
   received_order_no
 );
 
+-- create index
+CREATE UNIQUE INDEX idx_orders_1 ON received_order.orders (
+  person_in_charge,
+  received_order_no
+);
+
 -- Create 'set_update_at' Trigger
 CREATE TRIGGER set_updated_at
   BEFORE UPDATE

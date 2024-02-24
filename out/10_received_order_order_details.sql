@@ -34,6 +34,12 @@ ALTER TABLE received_order.order_details ADD PRIMARY KEY (
   product_no
 );
 
+-- create index
+CREATE INDEX idx_order_details_1 ON received_order.order_details (
+  product_no,
+  quantity DESC
+);
+
 -- Create 'set_update_at' Trigger
 CREATE TRIGGER set_updated_at
   BEFORE UPDATE

@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/samber/lo"
 	"github.com/teru-0529/define-monad/v3/store"
 )
 
@@ -103,9 +104,28 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 		}
 	}
 
-	// INFO:TODO: index書き込み
+	// INFO: index書き込み
 	if len(table.Indexes) > 0 {
-		fmt.Println("dummy")
+		file.WriteString("\n-- create index")
+		for _, index := range table.Indexes {
+			file.WriteString(fmt.Sprintf(
+				"\nCREATE %sINDEX %s ON %s.%s (\n",
+				lo.Ternary(index.Unique, "UNIQUE ", ""),
+				index.Name,
+				schema.NameEn,
+				table.NameEn,
+			))
+			items := []string{}
+			for _, field := range index.Fields {
+				items = append(items, fmt.Sprintf(
+					"  %s%s",
+					elements.NameEn(field.Field),
+					lo.Ternary(field.Asc, "", " DESC"),
+				))
+			}
+			file.WriteString(strings.Join(items, ",\n"))
+			file.WriteString("\n);\n")
+		}
 	}
 
 	// INFO: 更新日時設定Trigger書き込み
@@ -115,7 +135,7 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 	file.WriteString(fmt.Sprintf("  ON %s.%s\n", schema.NameEn, table.NameEn))
 	file.WriteString("  FOR EACH ROW\nEXECUTE PROCEDURE set_updated_at();\n")
 
-	// INFO:TODO: 履歴登録Function/Trigger書き込み
+	// INFO: 履歴登録Function/Trigger書き込み
 	if saveHistory {
 		file.WriteString("\n-- Create 'append_history' Function\n")
 		file.WriteString(fmt.Sprintf("DROP FUNCTION IF EXISTS %s.%s_audit();\n", schema.NameEn, table.NameEn))
@@ -160,3 +180,7 @@ func (table *Table) keyStr(prefix string, elements Elements) string {
 	}
 	return strings.Join(keys, " || '-' || ")
 }
+
+// ALTER TABLE scm.tbl ADD FOREIGN KEY (col, col) REFERENCES scm.tbl (col,col) ON DELETE CASCADE ON UPDATE CASCADE;
+
+// CREATE (UNIQUE) INDEX idx ON scm.tbl ( col ASC, col DESC);
