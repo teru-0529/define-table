@@ -15,7 +15,7 @@ Const COL_FORCE_NOTNULL = 8
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
   '// ペースト無効
-  'Application.CutCopyMode = False
+  Application.CutCopyMode = False
 End Sub
 
 '// テーブルシート削除イベント
