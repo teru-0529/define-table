@@ -39,12 +39,16 @@ ALTER TABLE received_order.customers ADD PRIMARY KEY (
 
 -- Set Unique Constraint
 ALTER TABLE received_order.customers ADD CONSTRAINT customers_unique_1 UNIQUE (
-  customer_name,
+  customer_id,
   person_in_charge
 );
 
 ALTER TABLE received_order.customers ADD CONSTRAINT customers_unique_2 UNIQUE (
   registration_date
+);
+
+ALTER TABLE received_order.customers ADD CONSTRAINT customers_unique_3 UNIQUE (
+  product_pic
 );
 
 -- create index

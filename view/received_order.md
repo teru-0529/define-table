@@ -25,12 +25,16 @@
 
 #### customers_unique_1
 
-* 得意先(customer_name)
+* 得意先ID(customer_id)
 * 担当者名(person_in_charge)
 
 #### customers_unique_2
 
 * 登録日(registration_date)
+
+#### customers_unique_3
+
+* 商品担当者ID(product_pic)
 
 ### Indexes
 
