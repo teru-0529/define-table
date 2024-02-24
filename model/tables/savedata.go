@@ -15,6 +15,7 @@ type SaveData struct {
 	CreateAt time.Time `yaml:"create_at"`
 	Schema   Schema    `yaml:"schema"`
 	Tables   []Table   `yaml:"tables"`
+	tMap     map[string]string
 }
 
 type Schema struct {
@@ -86,6 +87,12 @@ func New(path string) (*SaveData, error) {
 		return nil, err
 	}
 
+	// INFO: テーブル名mapの生成
+	ddls.tMap = map[string]string{}
+	for _, table := range ddls.Tables {
+		ddls.tMap[table.NameJp] = table.NameEn
+	}
+
 	return &ddls, nil
 }
 
@@ -111,4 +118,13 @@ func (savedata *SaveData) Write(path string) error {
 	}
 
 	return nil
+}
+
+// nameJp → nameEn
+func (savedata SaveData) getNameEn(nameJp string) string {
+	nameEn, ok := savedata.tMap[nameJp]
+	if !ok {
+		return "N/A"
+	}
+	return nameEn
 }

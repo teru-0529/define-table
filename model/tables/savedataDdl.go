@@ -10,7 +10,7 @@ import (
 )
 
 const DDL_FILE_SUFFIX = "10"
-const FK_DDL_FILE_SUFFIX = "11"
+const AFTER_DDL_FILE_SUFFIX = "11"
 const AUDIT_IDENTIFY_LENGTH = 58
 
 // ddl生成
@@ -18,11 +18,12 @@ func (savedata *SaveData) CreateDdl(ddlDir string, elements Elements, saveHistry
 
 	// INFO: テーブル単位で処理
 	for tableNo, table := range savedata.Tables {
+		// INFO: DDLの生成
 		table.createDdl(tableNo+1, ddlDir, elements, savedata.Schema, saveHistry)
 
-		// INFO:TODO: 外部キー用DDLの生成
+		// INFO: 外部キー用DDLの生成
 		if len(table.Constraint.ForeignKeys) > 0 {
-			fmt.Println("DUMMY")
+			table.createAfterDdl(tableNo+1, ddlDir, elements, savedata.Schema, *savedata)
 		}
 	}
 
@@ -181,6 +182,62 @@ func (table *Table) keyStr(prefix string, elements Elements) string {
 	return strings.Join(keys, " || '-' || ")
 }
 
-// ALTER TABLE scm.tbl ADD FOREIGN KEY (col, col) REFERENCES scm.tbl (col,col) ON DELETE CASCADE ON UPDATE CASCADE;
+// ddlの書き込み
+func (table *Table) createAfterDdl(tableNo int, ddlDir string, elements Elements, schema Schema, sData SaveData) error {
 
-// CREATE (UNIQUE) INDEX idx ON scm.tbl ( col ASC, col DESC);
+	// INFO: Fileの取得
+	path := filepath.Join(ddlDir, fmt.Sprintf("%s_%s_%s.sql", AFTER_DDL_FILE_SUFFIX, schema.NameEn, table.NameEn))
+	file, cleanup, err := store.NewFile(path)
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+
+	// INFO: header書き込み
+	file.WriteString("-- operation_afert_create_tables\n\n")
+	file.WriteString(fmt.Sprintf("-- %d.%s(%s)\n\n", tableNo, table.NameJp, table.NameEn))
+
+	// INFO: FK書き込み
+	file.WriteString("-- Set FK Constraint")
+	for _, fk := range table.Constraint.ForeignKeys {
+		file.WriteString(fmt.Sprintf(
+			"\nALTER TABLE %s.%s ADD CONSTRAINT %s FOREIGN KEY (\n",
+			schema.NameEn,
+			table.NameEn,
+			fk.Name,
+		))
+		// 自身のフィールド
+		items := []string{}
+		for _, field := range fk.Fields {
+			items = append(items, "  "+elements.NameEn(field.ThisField))
+		}
+		file.WriteString(strings.Join(items, ",\n"))
+		file.WriteString(fmt.Sprintf(
+			"\n) REFERENCES %s.%s (\n",
+			schema.NameEn,
+			sData.getNameEn(fk.RefTable),
+		))
+		// 参照元のフィールド
+		items = []string{}
+		for _, field := range fk.Fields {
+			items = append(items, "  "+elements.NameEn(field.RefField))
+		}
+		file.WriteString(strings.Join(items, ",\n"))
+		// オプション有無
+		deleteOption := ""
+		if fk.DeleteOption != nil {
+			deleteOption = fmt.Sprintf(" ON DELETE %s", *fk.DeleteOption)
+		}
+		updateOption := ""
+		if fk.UpdateOption != nil {
+			updateOption = fmt.Sprintf(" ON UPDATE %s", *fk.UpdateOption)
+		}
+		// if
+		file.WriteString(fmt.Sprintf(
+			"\n)%s%s;\n",
+			deleteOption,
+			updateOption,
+		))
+	}
+	return nil
+}

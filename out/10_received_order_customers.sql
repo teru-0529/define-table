@@ -10,6 +10,7 @@ CREATE TABLE received_order.customers (
   person_in_charge varchar(30),
   customer_type customer_type NOT NULL,
   registration_date date NOT NULL DEFAULT current_timestamp,
+  product_pic varchar(4) NOT NULL check (LENGTH(product_pic) = 4),
   created_at timestamp NOT NULL DEFAULT current_timestamp,
   updated_at timestamp NOT NULL DEFAULT current_timestamp,
   created_by varchar(58),
@@ -25,6 +26,7 @@ COMMENT ON COLUMN received_order.customers.customer_name IS '得意先';
 COMMENT ON COLUMN received_order.customers.person_in_charge IS '担当者名';
 COMMENT ON COLUMN received_order.customers.customer_type IS '取引先区分';
 COMMENT ON COLUMN received_order.customers.registration_date IS '登録日';
+COMMENT ON COLUMN received_order.customers.product_pic IS '商品担当者ID';
 COMMENT ON COLUMN received_order.customers.created_at IS '作成日時';
 COMMENT ON COLUMN received_order.customers.updated_at IS '更新日時';
 COMMENT ON COLUMN received_order.customers.created_by IS '作成者';
