@@ -36,8 +36,11 @@ End Sub
 Public Sub load(sht As Worksheet, record As String)
   Const DELIM1 = "*1*"
   Const DELIM2 = "*2*"
-  Dim i As Long, j As Long
+  Const DELIM3 = "*3*"
+  Const DELIM4 = "*4*"
+  Dim i As Long, j As Long, rowNo As Long, colNo As Long
   Dim data() As String, fields() As String, field() As String, pk() As String, uniques() As String, unique() As String
+  Dim fks() As String, fk() As String, fkFields() As String, indexes() As String, index() As String, indexFields() As String
   
   '// [tableJp]<tab>[tableEn]<tab>[isMaster]<DELIM1>[Fields]<DELIM1>...
   data = Split(record, DELIM1)
@@ -77,6 +80,46 @@ Public Sub load(sht As Worksheet, record As String)
       unique = Split(uniques(i), vbTab)
       For j = 0 To UBound(unique)
         sht.Range("UNIQUE_AREA").Resize(1, 1).Offset(i, j).Value = unique(j)
+      Next j
+    Next i
+  End If
+  
+  '// fks
+  '// [refTabke]<DELIM3>[deleteOption]<DELIM3>[updateOption]<DELIM3>[thisField]<tab>[refField]<DELIM4>[thisField]<tab>[refField]<DELIM2>
+  '//     [refTabke]<DELIM3>[deleteOption]<DELIM3>[updateOption]<DELIM3>[thisField]<tab>[refField]...
+  Debug.Print data(4)
+  If Len(data(4)) > 0 Then
+    fks = Split(data(4), DELIM2)
+    For i = 0 To UBound(fks)
+      rowNo = 26 + i * 5 '// テーブル名を記載する行番号
+      fk = Split(fks(i), DELIM3)
+      sht.Cells(rowNo, 12).Value = fk(0)  '// refTable
+      sht.Cells(rowNo, 14).Value = fk(1)  '// deleteOption
+      sht.Cells(rowNo, 16).Value = fk(2)  '// updateOption
+      fkFields = Split(fk(3), DELIM4)
+      For j = 0 To UBound(fkFields)
+        colNo = 12 + j '// フィールド名を記載する列番号
+        sht.Cells(rowNo + 2, colNo).Value = Split(fkFields(j), vbTab)(0)  '// thisField
+        sht.Cells(rowNo + 3, colNo).Value = Split(fkFields(j), vbTab)(1)  '// refField
+      Next j
+    Next i
+  End If
+  
+  '// indexes
+  '// [unique]<DELIM3>[field]<tab>[isAsc]<DELIM4>[field]<tab>[isAsc]<DELIM2>
+  '//     [unique]<DELIM3>[field]<tab>[isAsc]...
+  Debug.Print data(5)
+  If Len(data(5)) > 0 Then
+    indexes = Split(data(5), DELIM2)
+    For i = 0 To UBound(indexes)
+      rowNo = 55 + i * 2 '// 記載する行番号
+      index = Split(indexes(i), DELIM3)
+      sht.Cells(rowNo + 1, 11).Value = index(0) '// Unique
+      indexFields = Split(index(1), DELIM4)
+      For j = 0 To UBound(indexFields)
+        colNo = 12 + j '// フィールド名を記載する列番号
+        sht.Cells(rowNo, colNo).Value = Split(indexFields(j), vbTab)(0)   '// field
+        sht.Cells(rowNo + 1, colNo).Value = Split(indexFields(j), vbTab)(1)  '// asc
       Next j
     Next i
   End If
