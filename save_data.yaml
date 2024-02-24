@@ -1,6 +1,6 @@
 data_type: define_tables
 version: dev
-create_at: 2024-02-24T11:06:17+09:00
+create_at: 2024-02-24T11:12:38+09:00
 schema:
   name_jp: 受注
   name_en: received_order
@@ -83,6 +83,8 @@ tables:
           fields:
             - this: 得意先ID
               ref: 得意先ID
+            - this: 担当者名
+              ref: 担当者名
     indexes:
       - name: idx_orders_1
         unique: true
