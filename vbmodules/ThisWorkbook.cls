@@ -32,6 +32,21 @@ End Sub
 Private Sub Workbook_Open()
   startTime = Timer
 
+  '// 入力ファイルの存在チェック
+  If Not Util.existFile(Config.absPath(CLI_FILE)) Then
+    MsgBox "バックエンド処理用CLIファイルが存在しません [" & CLI_FILE & "]" & _
+    vbCrLf & vbCrLf & ThisWorkbook.Name & "と同じディレクトリに " & CLI_FILE & " を格納してください"
+    '// 保存せず終了する
+    ThisWorkbook.Close SaveChanges:=False
+  End If
+  
+  If Not Util.existFile(Config.absPath("vba.ini")) Then
+    MsgBox "vba設定ファイルが存在しません [vba.ini]" & _
+    vbCrLf & vbCrLf & ThisWorkbook.Name & "と同じディレクトリに vba.ini を格納してください"
+    '// 保存せず終了する
+    ThisWorkbook.Close SaveChanges:=False
+  End If
+  
   '// パス情報の取得
   Call Config.init("vba.ini")
 

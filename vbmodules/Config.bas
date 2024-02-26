@@ -27,6 +27,7 @@ Public DDL_DIR As String
 Dim FULL_VERSION As String
 Public OPERATION_MODE As String
 Public SAVE_HISTORY_FUNC As Boolean
+Public Const CLI_FILE = "define-table.exe"
 
 '// スキーマ名取得
 Public Function getSchemaJp() As String
@@ -116,7 +117,7 @@ Private Function getIniValue(ByVal base As String, ByVal key As String, ByVal pa
 End Function
 
 '// 絶対パスを取得
-Private Function absPath(ByVal path) As String
+Public Function absPath(ByVal path) As String
   absPath = CreateObject("Scripting.FileSystemObject").BuildPath(ThisWorkbook.path, path)
 End Function
 

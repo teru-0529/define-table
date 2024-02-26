@@ -19,7 +19,6 @@ End Sub
 
 '// 外部プロセスの呼び出し(処理結果＝標準出力を返す)
 Public Function outerExec(ByVal param As String) As String
-  Const CLI_FILE = "define-table.exe"
   Dim startTime As Double: startTime = Timer
 
   Dim FSO As Object: Set FSO = CreateObject("Scripting.FileSystemObject")
