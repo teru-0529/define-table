@@ -15,8 +15,8 @@ Dim startTime As Double
 Private Sub Workbook_Activate()
   Application.ScreenUpdating = False
 
-  '// パス情報の取得
-  Call Config.init("vba.ini")
+  '// .env読込み
+  Call Config.getEnv
 
   '// 更新時刻のチェック
   If Config.isUpdateModifyDatetime() Then
@@ -35,20 +35,20 @@ Private Sub Workbook_Open()
   '// 入力ファイルの存在チェック
   If Not Util.existFile(Config.absPath(CLI_FILE)) Then
     MsgBox "バックエンド処理用CLIファイルが存在しません [" & CLI_FILE & "]" & _
-    vbCrLf & vbCrLf & ThisWorkbook.Name & "と同じディレクトリに " & CLI_FILE & " を格納してください"
+    vbCrLf & vbCrLf & ThisWorkbook.Name & " と同じディレクトリに " & CLI_FILE & " を格納してください"
     '// 保存せず終了する
     ThisWorkbook.Close SaveChanges:=False
   End If
   
-  If Not Util.existFile(Config.absPath("vba.ini")) Then
-    MsgBox "vba設定ファイルが存在しません [vba.ini]" & _
-    vbCrLf & vbCrLf & ThisWorkbook.Name & "と同じディレクトリに vba.ini を格納してください"
+  If Not Util.existFile(Config.absPath(".env")) Then
+    MsgBox "vba設定ファイルが存在しません [.env]" & _
+    vbCrLf & vbCrLf & ThisWorkbook.Name & " と同じディレクトリに .env を格納してください"
     '// 保存せず終了する
     ThisWorkbook.Close SaveChanges:=False
   End If
   
-  '// パス情報の取得
-  Call Config.init("vba.ini")
+  '// .env読込み
+  Call Config.getEnv
 
   Application.ScreenUpdating = False
   Application.EnableEvents = False
@@ -82,9 +82,9 @@ Private Sub Workbook_Open()
   Application.StatusBar = False
   
   Debug.Print "[operationMode] " & Config.OPERATION_MODE
-  Debug.Print Config.getFullVersion
+  Debug.Print Config.FULL_VERSION
   Call showTime(Timer - startTime)
-  MsgBox Config.getFullVersion()
+  MsgBox Config.FULL_VERSION
 
 End Sub
 
@@ -101,8 +101,8 @@ End Sub
 Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Dim message As String, addHistoryFlag As String
   
-  '// パス情報の取得
-  Call Config.init("vba.ini")
+  '// .env読込み
+  Call Config.getEnv
 
   Application.ScreenUpdating = False
   '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -133,8 +133,8 @@ Private Sub Workbook_AfterSave(ByVal Success As Boolean)
   Debug.Print "[operationMode] " & Config.OPERATION_MODE
   '// 開発モードの場合、モジュールを出力
   If Config.isDevelop() Then Call ExportModule.SaveModule
-  Debug.Print Config.getFullVersion
+  Debug.Print Config.FULL_VERSION
   Call showTime(Timer - startTime)
   MsgBox message
-  
+    
 End Sub
