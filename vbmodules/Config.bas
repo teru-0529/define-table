@@ -1,53 +1,17 @@
 Attribute VB_Name = "Config"
 Option Explicit
 
-'// iniファイル読込み用関数定義
-Declare PtrSafe Function GetPrivateProfileString Lib _
-    "kernel32" Alias "GetPrivateProfileStringA" ( _
-    ByVal section As String, _
-    ByVal key As Any, _
-    ByVal default As String, _
-    ByVal Value As String, _
-    ByVal Size As Long, _
-    ByVal ini_path As String _
-) As Long
+Const CHAR_SET = "UTF-8"
 
-'// スキーマ
-Public SCHEMA_JP As String
-Public SCHEMA_EN As String
-
-'// 入出力パス
 Public SAVE_DATA As String
 Public ELEMENTS_DATA As String
 Public DDL_VIEW As String
-
 Public DDL_DIR As String
 
-'// 操作モード
-Dim FULL_VERSION As String
+Public FULL_VERSION As String
 Public OPERATION_MODE As String
 Public SAVE_HISTORY_FUNC As Boolean
 Public Const CLI_FILE = "define-table.exe"
-
-'// スキーマ名取得
-Public Function getSchemaJp() As String
-  getSchemaJp = SCHEMA_JP
-End Function
-
-'// スキーマ名取得
-Public Function getSchemaEn() As String
-  getSchemaEn = SCHEMA_EN
-End Function
-
-'// バージョン情報取得（Full）
-Public Function getFullVersion() As String
-  getFullVersion = FULL_VERSION
-End Function
-
-'// バージョン情報取得
-Public Function getVersion() As String
-  getVersion = Process.outerExec("version")
-End Function
 
 '// 項目定義の更新日時を記録
 Public Sub setModifyDatetime()
@@ -65,61 +29,83 @@ Public Function isDevelop() As Boolean
   isDevelop = OPERATION_MODE = "develop"
 End Function
 
-'// ./vba.iniから情報を取得してPublic変数に設定する
-Public Sub init(ByVal iniFile As String)
-  Dim startTime As Double: startTime = Timer
-
-  Dim FSO As Object: Set FSO = CreateObject("Scripting.FileSystemObject")
-  Dim iniPath As String: iniPath = FSO.BuildPath(ThisWorkbook.path, iniFile)
-
-  Debug.Print "|----|---- configuration setup start ----|----|"
-
-  SCHEMA_JP = getIniValue("schema", "nameJp", iniPath)
-  Range("SCHEMA_JP").Value = SCHEMA_JP
-  Debug.Print "[config] SCHEMA_JP: " & SCHEMA_JP
-  
-  SCHEMA_EN = getIniValue("schema", "nameEn", iniPath)
-  Range("SCHEMA_EN").Value = SCHEMA_EN
-  Debug.Print "[config] SCHEMA_EN: " & SCHEMA_EN
-
-  SAVE_DATA = absPath(getIniValue("Path", "saveData", iniPath))
-  Debug.Print "[config] SAVE_DATA: " & SAVE_DATA
-
-  ELEMENTS_DATA = absPath(getIniValue("Path", "elementsData", iniPath))
-  Debug.Print "[config] ELEMENTS_DATA: " & ELEMENTS_DATA
-
-  DDL_VIEW = absPath(getIniValue("Path", "viewDir", iniPath))
-  Debug.Print "[config] DDL_VIEW: " & DDL_VIEW
-
-  DDL_DIR = absPath(getIniValue("Path", "ddlDir", iniPath))
-  Debug.Print "[config] DDL_DIR: " & DDL_DIR
-
-  OPERATION_MODE = getIniValue("Operation", "mode", iniPath)
-  Debug.Print "[config] OPERATION_MODE: " & OPERATION_MODE
-
-  SAVE_HISTORY_FUNC = getIniValue("Operation", "saveHistoryFunc", iniPath)
-  Debug.Print "[config] SAVE_HISTORY_FUNC: " & SAVE_HISTORY_FUNC
-
-  FULL_VERSION = Process.outerExec("version -F")
-  Debug.Print "[config] FULL_VERSION: " & FULL_VERSION
-  
-  Set FSO = Nothing
-  Call Util.showTime(Timer - startTime)
-  Debug.Print "|----|---- configuration setup end ----|----|"
-End Sub
-
-Private Function getIniValue(ByVal base As String, ByVal key As String, ByVal path As String) As String
-  Const TEMP_LENGTH = 255
-  Dim temp As String: temp = Space(TEMP_LENGTH)
-
-  Call GetPrivateProfileString(base, key, "N/A", temp, TEMP_LENGTH, path)
-  getIniValue = Trim(Left(temp, InStr(temp, vbNullChar) - 1))
-End Function
-
 '// 絶対パスを取得
 Public Function absPath(ByVal path) As String
   absPath = CreateObject("Scripting.FileSystemObject").BuildPath(ThisWorkbook.path, path)
 End Function
+
+'// .envから情報を取得してPublic変数に設定する
+Public Sub getEnv()
+  Const ENV_FILE = ".env"
+  
+  Dim adoSt As Object
+  Dim line As String, v() As String
+  Dim schemaJp As String, schemaEn As String
+  Dim dic As New Dictionary
+  Dim startTime As Double: startTime = Timer
+  
+  Set adoSt = CreateObject("ADODB.Stream")
+
+  With adoSt
+    .Type = adTypeText
+    .Charset = CHAR_SET
+    .LineSeparator = adLF
+    .Open
+    Call .LoadFromFile(absPath(ENV_FILE))
+    
+    Do While Not (.EOS)
+      line = .ReadText(adReadLine)
+      
+      If Len(line) = 0 Then GoTo CONTINUE
+      If Left(line, 1) = "#" Then GoTo CONTINUE
+      
+      '// データ行
+      If InStr(1, line, "=") > 0 Then
+        v = Split(line, "=")
+        '// Dictionaryに登録
+        Call dic.Add(v(0), v(1))
+      End If
+
+CONTINUE:
+    Loop
+    
+    .Close
+  End With
+  Set adoSt = Nothing
+
+  Debug.Print "|----|---- configuration setup start ----|----|"
+  schemaJp = dic.item("schemaNameJp")
+  Range("SCHEMA_JP").Value = schemaJp
+  Debug.Print "[config] SCHEMA_JP: " & schemaJp
+  
+  schemaEn = dic.item("schemaNameEn")
+  Range("SCHEMA_EN").Value = schemaEn
+  Debug.Print "[config] SCHEMA_EN: " & schemaEn
+
+  SAVE_DATA = absPath(dic.item("saveData"))
+  Debug.Print "[config] SAVE_DATA: " & SAVE_DATA
+
+  ELEMENTS_DATA = absPath(dic.item("elementsData"))
+  Debug.Print "[config] ELEMENTS_DATA: " & ELEMENTS_DATA
+
+  DDL_VIEW = absPath(dic.item("viewDir"))
+  Debug.Print "[config] DDL_VIEW: " & DDL_VIEW
+
+  DDL_DIR = absPath(dic.item("ddlDir"))
+  Debug.Print "[config] DDL_DIR: " & DDL_DIR
+
+  OPERATION_MODE = dic.item("mode")
+  Debug.Print "[config] OPERATION_MODE: " & OPERATION_MODE
+  
+  SAVE_HISTORY_FUNC = dic.item("saveHistoryFunc")
+  Debug.Print "[config] SAVE_HISTORY_FUNC: " & SAVE_HISTORY_FUNC
+  
+  FULL_VERSION = Process.outerExec("version -F")
+  Debug.Print "[config] FULL_VERSION: " & FULL_VERSION
+  
+  Call Util.showTime(Timer - startTime)
+  Debug.Print "|----|---- configuration setup end ----|----|"
+End Sub
 
 '// 更新日時取得
 Private Function getModifyTime(ByVal path As String) As String
