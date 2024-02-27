@@ -77,6 +77,8 @@ github.com/teru-0529/define-monad/v3 v3.0.20 h1:Jmyo+iYx9xfCMIhvjKuKaB8Acf4rnTX4
 github.com/teru-0529/define-monad/v3 v3.0.20/go.mod h1:SPsE/DiNXBSZZcwHc+RRf+hPFoEQoHGRRhd+bIWsMtk=
 github.com/teru-0529/define-monad/v3 v3.0.21 h1:NDWYWsgrN+l49DjxHpmvXJS8MqcpCKQ4+AaIdhRPNeM=
 github.com/teru-0529/define-monad/v3 v3.0.21/go.mod h1:SPsE/DiNXBSZZcwHc+RRf+hPFoEQoHGRRhd+bIWsMtk=
+github.com/teru-0529/define-monad/v3 v3.0.22 h1:yJz22UuIUxayokNH/STSHjsj9ccEtIZib+j74JwA8Ik=
+github.com/teru-0529/define-monad/v3 v3.0.22/go.mod h1:SPsE/DiNXBSZZcwHc+RRf+hPFoEQoHGRRhd+bIWsMtk=
 github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca/go.mod h1:ybY/Jr0T0GTCnYjKqmdwxyxn2BQf2RcQIIvex5QldPI=
 github.com/xuri/efp v0.0.0-20231025114914-d1ff6096ae53 h1:Chd9DkqERQQuHpXjR/HSV1jLZA6uaoiwwH3vSuF3IW0=
 github.com/xuri/efp v0.0.0-20231025114914-d1ff6096ae53/go.mod h1:ybY/Jr0T0GTCnYjKqmdwxyxn2BQf2RcQIIvex5QldPI=

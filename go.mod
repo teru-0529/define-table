@@ -6,7 +6,7 @@ require (
 	github.com/samber/lo v1.39.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
-	github.com/teru-0529/define-monad/v3 v3.0.21
+	github.com/teru-0529/define-monad/v3 v3.0.22
 	github.com/xuri/excelize/v2 v2.8.0
 	golang.org/x/text v0.14.0
 	gopkg.in/yaml.v3 v3.0.1
