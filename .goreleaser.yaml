@@ -44,7 +44,7 @@ archives:
       - LICENSE*
       - README*
       - テーブル定義.xlsm
-      - vba.ini
+      - .env
       - save_data.yaml
 
 changelog:
