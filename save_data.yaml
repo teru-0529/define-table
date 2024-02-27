@@ -1,5 +1,5 @@
 data_type: define_tables
-version: 3.2.2
+version: 3.2.3
 create_at: 2024-02-27T23:41:30+09:00
 schema:
   name_jp: 受注
