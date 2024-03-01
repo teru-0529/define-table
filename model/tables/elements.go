@@ -120,7 +120,8 @@ func (elements *Elements) DDLField(field Field) string {
 		if element.IsDefaultStr {
 			result = append(result, fmt.Sprintf("DEFAULT '%s'", *field.Default))
 		} else {
-			result = append(result, fmt.Sprintf("DEFAULT %s", *field.Default))
+			// ["]を[']に変更
+			result = append(result, fmt.Sprintf("DEFAULT %s", strings.ReplaceAll(*field.Default, "\"", "'")))
 		}
 	}
 	if element.Constraint != "" {
@@ -214,7 +215,7 @@ func mustNotNull(element elements.Element) bool {
 // デフォルト値が文字列扱いかどうか
 func isDefaultStr(element elements.Element) bool {
 	return slices.Contains(
-		[]elements.Dom{elements.ID, elements.ENUM, elements.CODE, elements.STRING, elements.TEXT},
+		[]elements.Dom{elements.ID, elements.ENUM, elements.CODE, elements.STRING, elements.TEXT, elements.TIME},
 		element.Domain,
 	)
 }

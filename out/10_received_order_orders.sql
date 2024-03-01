@@ -6,7 +6,7 @@
 DROP TABLE IF EXISTS received_order.orders CASCADE;
 CREATE TABLE received_order.orders (
   received_order_no varchar(10) NOT NULL check (LENGTH(received_order_no) = 10),
-  order_date date NOT NULL,
+  order_date date NOT NULL DEFAULT '2024-01-02',
   person_in_charge varchar(30),
   customer_id varchar(3) NOT NULL check (LENGTH(customer_id) = 3),
   comment text check (LENGTH(comment) >= 10),

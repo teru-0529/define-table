@@ -60,7 +60,7 @@
 | # | 名称 | データ型 | NOT NULL | 初期値 | 制約 |
 | -- | -- | -- | -- | -- | -- |
 | 1 | 受注No(received_order_no) | varchar(10) | true |  | (LENGTH(received_order_no) = 10) |
-| 2 | 受注日(order_date) | date | true |  |  |
+| 2 | 受注日(order_date) | date | true | "2024-01-02" |  |
 | 3 | 担当者名(person_in_charge) | varchar(30) | false |  |  |
 | 4 | 得意先ID(customer_id) | varchar(3) | true |  | (LENGTH(customer_id) = 3) |
 | 5 | コメント(comment) | text | false |  | (LENGTH(comment) >= 10) |
