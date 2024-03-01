@@ -30,3 +30,5 @@ dist/
 !vbmodules/template.cls
 !vbmodules/ThisWorkbook.cls
 !vbmodules/work.cls
+
+~*

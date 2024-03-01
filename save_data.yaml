@@ -1,6 +1,6 @@
 data_type: define_tables
-version: 3.2.3
-create_at: 2024-02-27T23:41:30+09:00
+version: 3.2.4
+create_at: 2024-03-01T22:40:10+09:00
 schema:
   name_jp: 受注
   name_en: received_order
@@ -64,7 +64,7 @@ tables:
         default: null
       - name: 受注日
         nullable: false
-        default: null
+        default: '"2024-01-02"'
       - name: 担当者名
         nullable: true
         default: null
