@@ -3,7 +3,7 @@
 -- 2.受注(orders)
 
 -- Set FK Constraint
-ALTER TABLE received_order.orders DROP CONSTRAINT IF EXIST orders_foreignKey_1;
+ALTER TABLE received_order.orders DROP CONSTRAINT IF EXISTS orders_foreignKey_1;
 ALTER TABLE received_order.orders ADD CONSTRAINT orders_foreignKey_1 FOREIGN KEY (
   customer_id,
   person_in_charge
