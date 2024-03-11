@@ -201,7 +201,7 @@ func (table *Table) createAfterDdl(tableNo int, ddlDir string, elements Elements
 	file.WriteString("-- Set FK Constraint")
 	for _, fk := range table.Constraint.ForeignKeys {
 		file.WriteString(fmt.Sprintf(
-			"\nALTER TABLE %s.%s DROP CONSTRAINT IF EXIST %s;\n",
+			"\nALTER TABLE %s.%s DROP CONSTRAINT IF EXISTS %s;\n",
 			schema.NameEn,
 			table.NameEn,
 			fk.Name,
