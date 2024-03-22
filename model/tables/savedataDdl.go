@@ -51,7 +51,7 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 	file.WriteString(fmt.Sprintf("CREATE TABLE %s.%s (\n", schema.NameEn, table.NameEn))
 	fields := []string{}
 	for _, field := range table.Fields {
-		fields = append(fields, "  "+elements.DDLField(field))
+		fields = append(fields, "  "+elements.DDLField(field, schema.NameEn))
 	}
 	fields = addAuditFields(fields)
 	file.WriteString(strings.Join(fields, ",\n"))

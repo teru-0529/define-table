@@ -8,7 +8,7 @@ CREATE TABLE received_order.customers (
   customer_id varchar(3) NOT NULL check (LENGTH(customer_id) = 3),
   customer_name varchar(100) NOT NULL DEFAULT 'AAA',
   person_in_charge varchar(30),
-  customer_type customer_type NOT NULL,
+  customer_type received_order.customer_type NOT NULL,
   registration_date date NOT NULL DEFAULT current_timestamp,
   product_pic varchar(4) NOT NULL check (LENGTH(product_pic) = 4),
   created_at timestamp NOT NULL DEFAULT current_timestamp,
