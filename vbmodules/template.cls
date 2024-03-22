@@ -43,8 +43,8 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       i = elm.Row
       '// 入力値(NotNull、デフォルト値)のクリア
       Util.unionRange(Cells(i, COL_NOTNULL), Cells(i, COL_DEFAULT)).ClearContents
-      '// 強制NOTNULLの設定
-      If Cells(i, COL_FORCE_NOTNULL).Value = True Then Cells(i, COL_NOTNULL).Value = 1
+      '// 強制NOTNULLの設定///なし
+      'If Cells(i, COL_FORCE_NOTNULL).Value = True Then Cells(i, COL_NOTNULL).Value = 1
       
       '// 条件付き書式の設定（※入力後すぐのエラーを抑止するため初期化後に書式登録）
       If elm.Value = "" Then

@@ -21,6 +21,7 @@ type Element struct {
 	Constraint   string
 	MustNotNull  bool
 	IsDefaultStr bool
+	IsEnum       bool
 	Description  string
 	IsOrigin     bool
 	OriginName   string
@@ -46,6 +47,7 @@ func NewElements(path string) (*Elements, error) {
 			Constraint:   constraint(item, item.NameEn),
 			MustNotNull:  mustNotNull(item),
 			IsDefaultStr: isDefaultStr(item),
+			IsEnum:       item.Domain == elements.ENUM,
 			Description:  item.Description,
 			IsOrigin:     true,
 			OriginName:   item.NameJp,
@@ -62,6 +64,7 @@ func NewElements(path string) (*Elements, error) {
 			Constraint:   constraint(*item.Ref, item.NameEn),
 			MustNotNull:  mustNotNull(*item.Ref),
 			IsDefaultStr: isDefaultStr(*item.Ref),
+			IsEnum:       item.Ref.Domain == elements.ENUM,
 			Description:  item.Description,
 			IsOrigin:     false,
 			OriginName:   item.Ref.NameJp,
@@ -107,12 +110,17 @@ func (elements *Elements) NameEn(nameJp string) string {
 }
 
 // nameJp → ddlField
-func (elements *Elements) DDLField(field Field) string {
+func (elements *Elements) DDLField(field Field, schema string) string {
 	element, ok := elements.eMap[field.Name]
 	if !ok {
 		return "N/A"
 	}
-	result := []string{element.NameEn, element.DbModel}
+	result := []string{element.NameEn}
+	if element.IsEnum {
+		result = append(result, fmt.Sprintf("%s.%s", schema, element.DbModel))
+	} else {
+		result = append(result, element.DbModel)
+	}
 	if !field.Nullable {
 		result = append(result, "NOT NULL")
 	}

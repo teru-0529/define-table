@@ -8,8 +8,11 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/teru-0529/define-monad/v3/model/elements"
 	"github.com/teru-0529/define-table/v3/model/tables"
 )
+
+const ENUM_FILE_NAME = "01_types.sql"
 
 var ddlDir string
 var saveHistry bool
@@ -28,7 +31,7 @@ var ddlCmd = &cobra.Command{
 		}
 
 		// INFO: save-data(elements)の読込み
-		elements, err := tables.NewElements(elementsPath)
+		elements_, err := tables.NewElements(elementsPath)
 		if err != nil {
 			return err
 		}
@@ -36,13 +39,22 @@ var ddlCmd = &cobra.Command{
 		fmt.Printf("input yaml file: [%s]\n", filepath.ToSlash(filepath.Clean(savedataPath)))
 		fmt.Printf("input elements file: [%s]\n", filepath.ToSlash(filepath.Clean(elementsPath)))
 
+		// INFO: types-ddlの出力
+		eMonad, err := elements.New(elementsPath)
+		if err != nil {
+			return err
+		}
+		path := filepath.Join(ddlDir, ENUM_FILE_NAME)
+		eMonad.WriteTypesDdl(path, monad.Schema.NameEn)
+		fmt.Printf("output ddl file: [%s]\n", filepath.ToSlash(path))
+
 		// INFO: ddlの生成
-		fileCount, err := monad.CreateDdl(ddlDir, *elements, saveHistry)
+		fileCount, err := monad.CreateDdl(ddlDir, *elements_, saveHistry)
 		if err != nil {
 			return err
 		}
 
-		fmt.Printf("%d ddl files created", fileCount)
+		fmt.Printf("%d ddl files created", fileCount+1)
 		if saveHistry {
 			fmt.Println("(added history insert function.)")
 		}
