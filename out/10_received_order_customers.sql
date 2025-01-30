@@ -1,6 +1,6 @@
 -- is_master_table=true
 
--- 1.得意先(customers)
+-- 1.customers(customers)
 
 -- Create Table
 DROP TABLE IF EXISTS received_order.customers CASCADE;
@@ -18,7 +18,7 @@ CREATE TABLE received_order.customers (
 );
 
 -- Set Table Comment
-COMMENT ON TABLE received_order.customers IS '得意先';
+COMMENT ON TABLE received_order.customers IS 'customers';
 
 -- Set Column Comment
 COMMENT ON COLUMN received_order.customers.customer_id IS '得意先ID';

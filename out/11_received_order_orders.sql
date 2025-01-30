@@ -1,13 +1,11 @@
 -- operation_afert_create_tables
 
--- 2.受注(orders)
+-- 3.受注(orders)
 
 -- Set FK Constraint
 ALTER TABLE received_order.orders DROP CONSTRAINT IF EXISTS orders_foreignKey_1;
 ALTER TABLE received_order.orders ADD CONSTRAINT orders_foreignKey_1 FOREIGN KEY (
-  customer_id,
-  person_in_charge
-) REFERENCES received_order.customers (
-  customer_id,
-  person_in_charge
+  order_pic
+) REFERENCES received_order.operators (
+  operator_name
 );
