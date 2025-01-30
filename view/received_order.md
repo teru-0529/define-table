@@ -2,119 +2,111 @@
 
 ----------
 
-## #1 得意先(customers)
+## #1 担当者(operators)
 
 ### Fields
 
 | # | 名称 | データ型 | NOT NULL | 初期値 | 制約 |
 | -- | -- | -- | -- | -- | -- |
-| 1 | 得意先ID(customer_id) | varchar(3) | true |  | (LENGTH(customer_id) = 3) |
-| 2 | 得意先(customer_name) | varchar(100) | true | AAA |  |
-| 3 | 担当者名(person_in_charge) | varchar(30) | false |  |  |
-| 4 | 取引先区分(customer_type) | customer_type | true |  |  |
-| 5 | 登録日(registration_date) | date | true | current_timestamp |  |
-| 6 | 商品担当者ID(product_pic) | varchar(4) | true |  | (LENGTH(product_pic) = 4) |
+| 1 | 担当者ID(operator_id) | varchar(5) | true |  | (LENGTH(operator_id) = 5) |
+| 2 | 担当者名(operator_name) | varchar(30) | true |  |  |
 
 ### Constraints
 
 #### Primary Key
 
-* 得意先ID(customer_id)
+* 担当者ID(operator_id)
 
 #### Uniques
 
-#### customers_unique_1
+#### operators_unique_1
 
-* 得意先ID(customer_id)
-* 担当者名(person_in_charge)
-
-#### customers_unique_2
-
-* 登録日(registration_date)
-
-#### customers_unique_3
-
-* 商品担当者ID(product_pic)
-
-### Indexes
-
-#### idx_customers_1
-
-| # | フィールド | ASC/DESC |
-| -- | -- | -- |
-| 1 | 担当者名(person_in_charge) | ASC |
-
-#### idx_customers_2
-
-| # | フィールド | ASC/DESC |
-| -- | -- | -- |
-| 1 | 登録日(registration_date) | ASC |
-| 2 | 取引先区分(customer_type) | ASC |
+* 担当者名(operator_name)
 
 ----------
 
-## #2 受注(orders)
+## #2 商品(products)
 
 ### Fields
 
 | # | 名称 | データ型 | NOT NULL | 初期値 | 制約 |
 | -- | -- | -- | -- | -- | -- |
-| 1 | 受注No(received_order_no) | varchar(10) | true |  | (LENGTH(received_order_no) = 10) |
-| 2 | 受注日(order_date) | date | true | "2024-01-02" |  |
-| 3 | 担当者名(person_in_charge) | varchar(30) | false |  |  |
-| 4 | 得意先ID(customer_id) | varchar(3) | true |  | (LENGTH(customer_id) = 3) |
-| 5 | コメント(comment) | text | false |  | (LENGTH(comment) >= 10) |
+| 1 | 商品名(product_name) | varchar(30) | true |  |  |
+| 2 | 商品原価(cost_price) | integer | true |  | (cost_price >= 0) |
+| 3 | 商品ID(WORK)(w_product_id) | varchar(5) | true |  | (w_product_id ~* '^P[0-9]{4}$') |
 
 ### Constraints
 
 #### Primary Key
 
-* 受注No(received_order_no)
+* 商品名(product_name)
+
+#### Uniques
+
+#### products_unique_1
+
+* 商品ID(WORK)(w_product_id)
+
+----------
+
+## #3 受注(orders)
+
+### Fields
+
+| # | 名称 | データ型 | NOT NULL | 初期値 | 制約 |
+| -- | -- | -- | -- | -- | -- |
+| 1 | 受注番号(order_no) | integer | true |  |  |
+| 2 | 受注日付(order_date) | date | true |  |  |
+| 3 | 受注担当者名(order_pic) | varchar(30) | true |  |  |
+| 4 | 得意先名称(customer_name) | varchar(50) | true |  |  |
+
+### Constraints
+
+#### Primary Key
+
+* 受注番号(order_no)
 
 #### Foreign Keys
 
 #### orders_foreignKey_1
 
-* 参照先テーブル : 得意先(customers)
+* 参照先テーブル : 担当者(operators)
 * 削除時オプション : RESTRICT(デフォルト値)
 * 更新時オプション : RESTRICT(デフォルト値)
 
 | # | フィールド | 参照先フィールド |
 | -- | -- | -- |
-| 1 | 得意先ID(customer_id) | 得意先ID(customer_id) |
-| 2 | 担当者名(person_in_charge) | 担当者名(person_in_charge) |
-
-### Indexes
-
-#### idx_orders_1
-
-* ユニークINDEX
-
-| # | フィールド | ASC/DESC |
-| -- | -- | -- |
-| 1 | 担当者名(person_in_charge) | ASC |
-| 2 | 受注No(received_order_no) | ASC |
+| 1 | 受注担当者名(order_pic) | 担当者名(operator_name) |
 
 ----------
 
-## #3 受注明細(order_details)
+## #4 受注明細(order_details)
 
 ### Fields
 
 | # | 名称 | データ型 | NOT NULL | 初期値 | 制約 |
 | -- | -- | -- | -- | -- | -- |
-| 1 | 受注No(received_order_no) | varchar(10) | true |  | (LENGTH(received_order_no) = 10) |
-| 2 | 商品No(product_no) | varchar(10) | true |  | (LENGTH(product_no) >= 9) |
-| 3 | 数量(quantity) | integer | false |  | (0 <= quantity AND quantity <= 99999) |
-| 4 | 定価(price) | integer | false |  | (price >= 0) |
-| 5 | 受注担当者ID(order_pic) | varchar(4) | false |  | (LENGTH(order_pic) = 4) |
+| 1 | 受注番号(order_no) | integer | true |  |  |
+| 2 | 受注明細番号(order_detail_no) | integer | true |  |  |
+| 3 | 商品名(product_name) | varchar(30) | true |  |  |
+| 4 | 受注数量(receiving_quantity) | integer | true |  | (receiving_quantity >= 0) |
+| 5 | 出荷済フラグ(shipping_flag) | boolean | true |  |  |
+| 6 | キャンセルフラグ(cancel_flag) | boolean | true |  |  |
+| 7 | 販売単価(selling_price) | integer | true |  | (selling_price >= 0) |
+| 8 | 商品原価(cost_price) | integer | true |  | (cost_price >= 0) |
+| 9 | 受注番号(WORK)(w_order_no) | varchar(10) | true |  | (w_order_no ~* '^RO-[0-9]{7}$') |
+| 10 | 出荷済数(WORK)(w_shipping_quantity) | integer | true | 0 | (w_shipping_quantity >= 0) |
+| 11 | キャンセル数(WORK)(w_cancel_quantity) | integer | true | 0 | (w_cancel_quantity >= 0) |
+| 12 | 受注残数(WORK)(w_remaining_quantity) | integer | true | 0 | (w_remaining_quantity >= 0) |
+| 13 | 受注金額(WORK)(w_total_order_price) | integer | true | 0 | (w_total_order_price >= 0) |
+| 14 | 受注残額(WORK)(w_remaining_order_price) | integer | true | 0 | (w_remaining_order_price >= 0) |
 
 ### Constraints
 
 #### Primary Key
 
-* 受注No(received_order_no)
-* 商品No(product_no)
+* 受注番号(order_no)
+* 受注明細番号(order_detail_no)
 
 #### Foreign Keys
 
@@ -126,25 +118,16 @@
 
 | # | フィールド | 参照先フィールド |
 | -- | -- | -- |
-| 1 | 受注No(received_order_no) | 受注No(received_order_no) |
+| 1 | 受注番号(order_no) | 受注番号(order_no) |
 
 #### order_details_foreignKey_2
 
-* 参照先テーブル : 得意先(customers)
+* 参照先テーブル : 商品(products)
 * 削除時オプション : RESTRICT(デフォルト値)
 * 更新時オプション : RESTRICT(デフォルト値)
 
 | # | フィールド | 参照先フィールド |
 | -- | -- | -- |
-| 1 | 受注担当者ID(order_pic) | 商品担当者ID(product_pic) |
-
-### Indexes
-
-#### idx_order_details_1
-
-| # | フィールド | ASC/DESC |
-| -- | -- | -- |
-| 1 | 商品No(product_no) | ASC |
-| 2 | 数量(quantity) | DESC |
+| 1 | 商品名(product_name) | 商品名(product_name) |
 
 ----------

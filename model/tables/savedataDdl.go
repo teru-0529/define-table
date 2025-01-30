@@ -142,15 +142,15 @@ func (table *Table) createDdl(tableNo int, ddlDir string, elements Elements, sch
 		file.WriteString(fmt.Sprintf("DROP FUNCTION IF EXISTS %s.%s_audit();\n", schema.NameEn, table.NameEn))
 		file.WriteString(fmt.Sprintf("CREATE OR REPLACE FUNCTION %s.%s_audit() RETURNS TRIGGER AS $$\n", schema.NameEn, table.NameEn))
 		file.WriteString("BEGIN\n  IF (TG_OP = 'DELETE') THEN\n")
-		file.WriteString("    INSERT INTO operation_histories(schema_name, table_name, operation_type, table_key)\n")
+		file.WriteString("    INSERT INTO public.operation_histories(schema_name, table_name, operation_type, table_key)\n")
 		file.WriteString(fmt.Sprintf("    SELECT TG_TABLE_SCHEMA, TG_TABLE_NAME, 'DELETE', %s;\n", table.keyStr("OLD", elements)))
 
 		file.WriteString("  ELSIF (TG_OP = 'UPDATE') THEN\n")
-		file.WriteString("    INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)\n")
+		file.WriteString("    INSERT INTO public.operation_histories(operated_by, schema_name, table_name, operation_type, table_key)\n")
 		file.WriteString(fmt.Sprintf("    SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'UPDATE', %s;\n", table.keyStr("NEW", elements)))
 
 		file.WriteString("  ELSIF (TG_OP = 'INSERT') THEN\n")
-		file.WriteString("    INSERT INTO operation_histories(operated_by, schema_name, table_name, operation_type, table_key)\n")
+		file.WriteString("    INSERT INTO public.operation_histories(operated_by, schema_name, table_name, operation_type, table_key)\n")
 		file.WriteString(fmt.Sprintf("    SELECT NEW.updated_by, TG_TABLE_SCHEMA, TG_TABLE_NAME, 'INSERT', %s;\n", table.keyStr("NEW", elements)))
 
 		file.WriteString("  END IF;\n  RETURN null;\nEND;\n$$ LANGUAGE plpgsql;\n")
